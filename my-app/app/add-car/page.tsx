@@ -499,8 +499,8 @@ export default function AddCar() {
                 }
               }}
               className={`border p-3 rounded w-full ${priceError ? 'border-red-500' : 'border-gray-300'}`}
-              min="0"
-              max="999"
+              min="5"
+              max="100"
             />
             {priceError && <p className="text-red-500 text-sm mt-1">{priceError}</p>}
           </div>

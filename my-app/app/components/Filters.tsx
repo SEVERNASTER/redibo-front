@@ -350,6 +350,12 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
               placeholder="Buscar"
               value={searchInput}
               onChange={handleSearchInput}
+              onKeyDown={(e) => {
+                 if (e.key === "Enter") {
+                    onFilterChange({ ...filters, search: searchInput.trim() });
+                    setShowSuggestions(false); // Ocultar sugerencias al buscar
+                 }
+              }}
               className="w-full px-4 py-2 bg-[#F9F1E7] text-xs text-gray-800 placeholder-gray-400 focus:outline-none"
               maxLength={50}
             />

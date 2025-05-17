@@ -59,21 +59,51 @@ export default function AddCar() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePhotoUrlChange = (index: number, value: string) => {
-    const newPhotoUrls = [...formData.photoUrls];
-    newPhotoUrls[index] = value;
-    setFormData((prev) => ({ ...prev, photoUrls: newPhotoUrls }));
-  };
+  const [imageErrors, setImageErrors] = useState<string[]>(["", "", ""]);
+  const extensionesValidas = /\.(jpg|jpeg|png|gif|webp|svg|avif)$/i;
 
-  const handleAddEquipment = () => {
-    if (equipmentInput.trim()) {
-      setFormData((prev) => ({
-        ...prev,
-        extraEquipment: [...prev.extraEquipment, equipmentInput.trim()],
-      }));
-      setEquipmentInput("");
+   const handlePhotoUrlChange = (index: number, value: string) => {
+    const updatedUrls = [...formData.photoUrls];
+    const updatedErrors = [...imageErrors];
+
+    if (value.trim() === "") {
+      updatedUrls[index] = "";
+      updatedErrors[index] = "";
+      setFormData({ ...formData, photoUrls: updatedUrls });
+      setImageErrors(updatedErrors);
+      return;
     }
-  };
+
+   if (!extensionesValidas.test(value)) {
+      updatedErrors[index] = `La URL ${index + 1} no tiene un formato válido de imagen.`;
+      setImageErrors(updatedErrors);
+      return;
+    }
+
+    const img = new Image();
+     img.onload = () => {
+     updatedUrls[index] = value;
+     updatedErrors[index] = "";
+     setFormData({ ...formData, photoUrls: updatedUrls });
+     setImageErrors(updatedErrors);
+    };
+     img.onerror = () => {
+     updatedErrors[index] = `La URL ${index + 1} no carga una imagen válida.`;
+     setImageErrors(updatedErrors);
+    };
+
+     img.src = value;
+    };
+
+    const handleAddEquipment = () => {
+      if (equipmentInput.trim()) {
+        setFormData((prev) => ({
+          ...prev,
+          extraEquipment: [...prev.extraEquipment, equipmentInput.trim()],
+        }));
+       setEquipmentInput("");
+      }
+    };
 
   const placa = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -566,30 +596,53 @@ export default function AddCar() {
         </div>
 
         <div className="md:col-span-1">
-          <h2 className="text-xl font-bold mb-4 uppercase">Fotos (URL) <span className="text-red-500 text-[1.5rem] font-semibold">*</span></h2>
-          {formData.photoUrls.map((url, idx) => (
-            <div className="mb-2" key={idx}>
-              <input
-                type="text"
-                value={url}
-                onChange={(e) => handlePhotoUrlChange(idx, e.target.value)}
-                placeholder={`URL de la foto ${idx + 1}`}
-                className={`mt-1 block w-full p-2 border rounded ${photoError ? 'border-red-500' : 'border-gray-300'}`}
-              />
-            </div>
-          ))}
-          {formData.photoUrls.length < 5 && (
-            <button
-              type="button"
-              onClick={() => setFormData((prev) => ({ ...prev, photoUrls: [...prev.photoUrls, ""] }))}
-              className="text-orange-500"
-            >
-              + Agregar otra foto
-            </button>
+         <h2 className="text-xl font-bold mb-4 uppercase">
+          Fotos (URL) <span className="text-red-500 text-[1.5rem] font-semibold">*</span>
+         </h2>
+
+        {formData.photoUrls.map((url, idx) => (
+         <div className="mb-4" key={idx}>
+          <input
+           type="text"
+           value={url}
+           onChange={(e) => handlePhotoUrlChange(idx, e.target.value)}
+           placeholder={`URL de la foto ${idx + 1}`}
+           className={`mt-1 block w-full p-2 border rounded ${
+           imageErrors[idx] ? "border-red-500" : "border-gray-300"
+           }`}
+          />
+         {imageErrors[idx] && (
+           <p className="text-red-500 text-sm mt-1">{imageErrors[idx]}</p>
+         )}
+         {extensionesValidas.test(url) &&
+           url.trim() !== "" &&
+           !imageErrors[idx] && (
+             <img
+              src={url}
+              alt={`Foto ${idx + 1}`}
+              className="w-32 h-auto mt-2 border rounded"
+              onError={(e) => (e.currentTarget.style.display = "none")}
+             />
           )}
-          {photoError && <p className="text-red-500 text-sm mt-1">{photoError}</p>}
-        </div>
-      </form>
+         </div>
+       ))}
+
+      {formData.photoUrls.length < 5 && (
+      <button
+        type="button"
+        onClick={() =>
+          setFormData((prev) => ({
+             ...prev,
+             photoUrls: [...prev.photoUrls, ""],
+           }))
+         }
+          className="text-orange-500"
+        >
+            + Agregar otra foto
+         </button>
+         )}
+       </div>      
+    </form>
 
       {/* Modal del calendario */}
       {isCalendarOpen && (

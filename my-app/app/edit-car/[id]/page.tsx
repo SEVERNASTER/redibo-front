@@ -43,6 +43,8 @@ export default function EditCar() {
     fuelType: "",
     transmission: "",
   });
+
+  const [imageErrors, setImageErrors] = useState<string[]>(["", "", "", "", ""]);
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const loadCar = async () => {
@@ -50,20 +52,18 @@ export default function EditCar() {
       try {
         const response = await fetchCarById(Number(id), token);
 
-        // Verifica si la respuesta tiene `imageUrl` y convierte a un arreglo de URLs
         const imageUrls = Array.isArray(response.imageUrl)
-          ? response.imageUrl // Si ya es un arreglo, lo dejamos tal cual
+          ? response.imageUrl 
           : response.imageUrl
-          ? [response.imageUrl] // Si es un solo string, lo convertimos en un arreglo
-          : []; // Si es undefined o null, usamos un arreglo vacío
+          ? [response.imageUrl] 
+          : []; 
 
-        // Asegúrate de que imageUrls tenga al menos 5 elementos
         const transformedResponse: Car = {
           ...response,
           imageUrls:
             imageUrls.length >= 5
-              ? imageUrls // Si ya tiene 5 o más, lo dejamos igual
-              : [...imageUrls, ...new Array(5 - imageUrls.length).fill("")], // Rellenamos hasta tener 5
+              ? imageUrls 
+              : [...imageUrls, ...new Array(5 - imageUrls.length).fill("")], 
         };
 
         setCar(transformedResponse);
@@ -109,13 +109,12 @@ export default function EditCar() {
     const { name, value } = e.target as HTMLInputElement;
 
     if (name === "brand" || name === "model" || name === "color") {
-      const allowedChars = /^[a-zA-Z\s]*$/; // Solo letras y espacios
+      const allowedChars = /^[a-zA-Z\s]*$/; 
       if (!allowedChars.test(e.key)) {
-        e.preventDefault(); // Bloquear tecla no permitida
+        e.preventDefault(); 
       }
     }
     if (name === "year") {
-      // Si el valor ya tiene 4 dígitos, bloquear la tecla (no permitir más caracteres)
       if (value.length >= 4) {
         e.preventDefault();
       }
@@ -128,7 +127,6 @@ export default function EditCar() {
     >
   ) => {
     const { name, value } = e.target;
-    // Validar cada campo según su tipo
     let errorMessage = "";
     if (name === "pricePerDay") {
       errorMessage = validatePricePerDay(Number(value));
@@ -144,13 +142,11 @@ export default function EditCar() {
       errorMessage = value ? "" : "El combustible es obligatorio";
     }
 
-    // Actualizar el estado de los errores
     setFormErrors((prev) => ({
       ...prev,
       [name]: errorMessage,
     }));
 
-    // Actualizar los datos del formulario
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -158,16 +154,15 @@ export default function EditCar() {
     e.preventDefault();
     if (!token) return;
 
-    // Asegurarse de que imageUrls siempre sea un arreglo de cadenas
     const validImageUrls = Array.isArray(formData.imageUrls)
-      ? formData.imageUrls // Si ya es un arreglo de cadenas, lo dejamos tal cual
+      ? formData.imageUrls 
       : formData.imageUrls
-      ? [formData.imageUrls] // vaSi es un string, lo convertimos en un arreglo
-      : []; // Si es undefined, usamos un arreglo vacío
+      ? [formData.imageUrls] 
+      : [];
 
     const updatedFormData = {
       ...formData,
-      imageUrls: validImageUrls, // Aseguramos que imageUrls sea siempre un arreglo de cadenas
+      imageUrls: validImageUrls, 
     };
 
     try {
@@ -185,6 +180,42 @@ export default function EditCar() {
   if (error) return <p className="text-center text-red-500">{error}</p>;
   if (!car) return <p className="text-center">Cargando...</p>;
 
+  const extensionesValidas = /\.(jpg|jpeg|png|gif|webp|svg|avif)$/i;
+
+  const handlePhotoUrlChange = (index: number, value: string) => {
+    const updatedUrls = [...(formData.imageUrls ?? [])];
+    const updatedErrors = [...imageErrors];
+
+    if (value.trim() === "") {
+      updatedUrls[index] = "";
+      updatedErrors[index] = "";
+      setFormData((prev) => ({ ...prev, imageUrls: updatedUrls }));
+      setImageErrors(updatedErrors);
+       return;
+     }
+
+    if (!extensionesValidas.test(value)) {
+      updatedErrors[index] = `La URL ${index + 1} no tiene un formato válido de imagen.`;
+      setImageErrors(updatedErrors);
+       return;
+    }
+
+    const img = new Image();
+      img.onload = () => {
+       updatedUrls[index] = value;
+       updatedErrors[index] = "";
+       setFormData((prev) => ({ ...prev, imageUrls: updatedUrls }));
+       setImageErrors(updatedErrors);
+    };
+      img.onerror = () => {
+      updatedErrors[index] = `La URL ${index + 1} no carga una imagen válida.`;
+      setImageErrors(updatedErrors);
+    };
+
+      img.src = value + `?cacheBust=${Date.now()}`;
+  };
+
+
   return (
     <div>
       <h1 className="text-2xl font-bold mb-7 pb-5 ">Editar Auto</h1>
@@ -197,6 +228,7 @@ export default function EditCar() {
             <h2 className="text-xl font-bold mb-4 uppercase">INFORMACIÓN</h2>
             <div className="grid grid-cols-2 gap-4 mb-4">
               <div>
+
                 {/* Color */}
                 <label className="block text-gray-600 mb-1">Color *</label>
                 <input
@@ -302,6 +334,7 @@ export default function EditCar() {
             </div>
           </div>
           <div className="md:col-span-1">
+
             {/* Descripción */}
             <div className="md:col-span-2">
               <label className="text-xl font-bold mb-4 uppercase">
@@ -315,26 +348,39 @@ export default function EditCar() {
                 className="mt-1 block w-full p-3 border rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
               />
             </div>
+
             {/* Imágenes */}
             <div className="md:col-span-2">
               <label className="text-xl font-bold mb-7 uppercase">
                 FOTOS (URL)
               </label>
-              {(formData.imageUrls ?? []).map((url, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  value={url}
-                  onChange={(e) => {
-                    const updatedUrls = [...(formData.imageUrls ?? [])]; // Usamos un arreglo vacío si es undefined
-                    updatedUrls[index] = e.target.value;
-                    setFormData({ ...formData, imageUrls: updatedUrls });
-                  }}
-                  className="mt-2 block w-full p-3 border rounded-2xl shadow-sm"
-                />
-              ))}
+                {(formData.imageUrls ?? []).map((url, index) => (
+            <div key={index} className="mb-4">
+              <input
+                type="text"
+                value={url}
+                onChange={(e) => handlePhotoUrlChange(index, e.target.value)}
+                placeholder={`URL de la imagen ${index + 1}`}
+                className={`block w-full p-3 border rounded-2xl shadow-sm ${
+                imageErrors[index] ? "border-red-500" : "border-gray-300"
+              }`}
+              />
+            {imageErrors[index] && (
+              <p className="text-red-500 text-sm mt-1">{imageErrors[index]}</p>
+            )}
+            {extensionesValidas.test(url) && url.trim() !== "" && !imageErrors[index] && (
+              <img
+                src={url}
+                alt={`Vista previa ${index + 1}`}
+                className="mt-2 w-32 h-auto border rounded"
+                onError={(e) => (e.currentTarget.style.display = "none")}
+              />
+             )}
+              </div>
+             ))}
             </div>
           </div>
+
           {/* Botones */}
           <div className="flex justify-end gap-4 mt-6">
             <button

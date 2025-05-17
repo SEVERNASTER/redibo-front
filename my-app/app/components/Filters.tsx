@@ -223,7 +223,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
     const value = e.target.value;
     const sanitizedValue = value.replace(/['";\\/*<>&|^$~@!{}[\]()=+]/g, "");
     setSearchInput(sanitizedValue);
-    
+
 
     const saved = localStorage.getItem("searchHistory");
     const previousSearches = saved ? (JSON.parse(saved) as string[]) : [];
@@ -333,7 +333,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
 
       {/* BARRA DE BÚSQUEDA */}
       <div className="relative w-full max-w-4xl mt-4">
-        <div className="flex rounded overflow-hidden border border-gray-300">
+        <div className="flex rounded overflow-hidden border border-[#FCA311] border-[2px]">
           {/* Botón de búsqueda */}
           <button
             type="button"
@@ -345,12 +345,12 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
 
           <div className="relative w-full">
             <input
-              type="text"
+              type="search"
               name="search"
               placeholder="Buscar"
               value={searchInput}
               onChange={handleSearchInput}
-              className="w-full px-4 py-2 bg-[#F9F1E7] text-xs text-gray-800 placeholder-gray-400 focus:outline-none"
+              className="w-full h-[60px] text-[18px]  px-4 py-2 bg-[#F9F1E7] text-xs text-[#bebebe] placeholder-gray-400 focus:outline-none"
               maxLength={50}
             />
             <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[0.75rem] text-orange-500">
@@ -792,7 +792,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
               <div className="w-40">
                 <button
                   type="button"
-                  onClick={() => setActiveFilter(activeFilter === 'showTransmissionOptions' ? null : 'showTransmissionOptions') }
+                  onClick={() => setActiveFilter(activeFilter === 'showTransmissionOptions' ? null : 'showTransmissionOptions')}
                   className="border p-2 rounded flex items-center justify-between w-full"
                 >
                   {filters.transmission || "Transmisión"}
@@ -810,7 +810,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
                     />
                   </svg>
                 </button>
-                {activeFilter==='showTransmissionOptions' && (
+                {activeFilter === 'showTransmissionOptions' && (
                   <div className="absolute bg-white border rounded mt-2 p-2 shadow-lg z-10">
                     <label className="flex items-center gap-2">
                       <input

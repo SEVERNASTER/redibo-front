@@ -4,6 +4,7 @@ import { FaTrash } from "react-icons/fa";
 
 interface FiltersProps {
   filters: {
+    availability: any;
     brand: string;
     model: string;
     carType: string;
@@ -26,14 +27,17 @@ const FiltrosHost: React.FC<FiltersProps> = ({
       filters.brand !== "" ||
       filters.carType !== "" ||
       filters.transmission !== "" ||
-      filters.sortBy !== ""
+      filters.sortBy !== "" ||
+      filters.availability !== ""
     );
   };
+
+
 
   return (
     <div className=" p-4 rounded-lg mb-4 shadow-sm">
       <div className="flex justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 mb-2 items-center max-w-6xl w-full">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-auto-fit gap-4 mb-2 items-center max-w-6xl w-full md:[grid-template-columns:repeat(auto-fit,minmax(150px,1fr))]">
           <input
             type="search"
             placeholder="Marca"
@@ -96,6 +100,33 @@ const FiltrosHost: React.FC<FiltersProps> = ({
               <option value="priceDesc">Precio: mayor a menor</option>
             </select>
           )}
+
+          {filters.availability ? (
+            <div className="flex items-center bg-orange-500 text-white rounded-full px-3 py-1 w-full justify-between">
+              <span className="truncate capitalize">
+                {filters.availability === "available"
+                  ? "Disponible"
+                  : "No disponible"}
+              </span>
+              <button
+                onClick={() => onFilterChange({ availability: "" })}
+                className="ml-2 text-white hover:text-gray-200 font-bold"
+              >
+                ×
+              </button>
+            </div>
+          ) : (
+            <select
+              value={filters.availability}
+              onChange={(e) => onFilterChange({ availability: e.target.value })}
+              className="p-2 border rounded w-full"
+            >
+              <option value="">Disponibilidad</option>
+              <option value="available">Disponible</option>
+              <option value="notAvailable">No disponible</option>
+            </select>
+          )}
+
 
           {hayFiltrosActivos() && (
             <button

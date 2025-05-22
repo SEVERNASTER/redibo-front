@@ -53,17 +53,17 @@ export default function EditCar() {
         const response = await fetchCarById(Number(id), token);
 
         const imageUrls = Array.isArray(response.imageUrl)
-          ? response.imageUrl 
+          ? response.imageUrl
           : response.imageUrl
-          ? [response.imageUrl] 
-          : []; 
+            ? [response.imageUrl]
+            : [];
 
         const transformedResponse: Car = {
           ...response,
           imageUrls:
             imageUrls.length >= 5
-              ? imageUrls 
-              : [...imageUrls, ...new Array(5 - imageUrls.length).fill("")], 
+              ? imageUrls
+              : [...imageUrls, ...new Array(5 - imageUrls.length).fill("")],
         };
 
         setCar(transformedResponse);
@@ -109,9 +109,9 @@ export default function EditCar() {
     const { name, value } = e.target as HTMLInputElement;
 
     if (name === "brand" || name === "model" || name === "color") {
-      const allowedChars = /^[a-zA-Z\s]*$/; 
+      const allowedChars = /^[a-zA-Z\s]*$/;
       if (!allowedChars.test(e.key)) {
-        e.preventDefault(); 
+        e.preventDefault();
       }
     }
     if (name === "year") {
@@ -155,14 +155,14 @@ export default function EditCar() {
     if (!token) return;
 
     const validImageUrls = Array.isArray(formData.imageUrls)
-      ? formData.imageUrls 
+      ? formData.imageUrls
       : formData.imageUrls
-      ? [formData.imageUrls] 
-      : [];
+        ? [formData.imageUrls]
+        : [];
 
     const updatedFormData = {
       ...formData,
-      imageUrls: validImageUrls, 
+      imageUrls: validImageUrls,
     };
 
     try {
@@ -191,28 +191,28 @@ export default function EditCar() {
       updatedErrors[index] = "";
       setFormData((prev) => ({ ...prev, imageUrls: updatedUrls }));
       setImageErrors(updatedErrors);
-       return;
-     }
+      return;
+    }
 
     if (!extensionesValidas.test(value)) {
       updatedErrors[index] = `La URL ${index + 1} no tiene un formato válido de imagen.`;
       setImageErrors(updatedErrors);
-       return;
+      return;
     }
 
     const img = new Image();
-      img.onload = () => {
-       updatedUrls[index] = value;
-       updatedErrors[index] = "";
-       setFormData((prev) => ({ ...prev, imageUrls: updatedUrls }));
-       setImageErrors(updatedErrors);
+    img.onload = () => {
+      updatedUrls[index] = value;
+      updatedErrors[index] = "";
+      setFormData((prev) => ({ ...prev, imageUrls: updatedUrls }));
+      setImageErrors(updatedErrors);
     };
-      img.onerror = () => {
+    img.onerror = () => {
       updatedErrors[index] = `La URL ${index + 1} no carga una imagen válida.`;
       setImageErrors(updatedErrors);
     };
 
-      img.src = value + `?cacheBust=${Date.now()}`;
+    img.src = value + `?cacheBust=${Date.now()}`;
   };
 
 
@@ -238,9 +238,8 @@ export default function EditCar() {
                   value={formData.color || ""}
                   onChange={handleChange}
                   onKeyDown={handleKeyDown}
-                  className={`mt-1 block w-full p-2 border rounded ${
-                    formErrors.color ? "border-red-500" : "border-gray-300"
-                  }`}
+                  className={`mt-1 block w-full p-2 border rounded ${formErrors.color ? "border-red-500" : "border-gray-300"
+                    }`}
                 />
                 {formErrors.color && (
                   <p className="text-red-500 text-sm mt-1">{formErrors.color}</p>
@@ -354,30 +353,29 @@ export default function EditCar() {
               <label className="text-xl font-bold mb-7 uppercase">
                 FOTOS (URL)
               </label>
-                {(formData.imageUrls ?? []).map((url, index) => (
-            <div key={index} className="mb-4">
-              <input
-                type="text"
-                value={url}
-                onChange={(e) => handlePhotoUrlChange(index, e.target.value)}
-                placeholder={`URL de la imagen ${index + 1}`}
-                className={`block w-full p-3 border rounded-2xl shadow-sm ${
-                imageErrors[index] ? "border-red-500" : "border-gray-300"
-              }`}
-              />
-            {imageErrors[index] && (
-              <p className="text-red-500 text-sm mt-1">{imageErrors[index]}</p>
-            )}
-            {extensionesValidas.test(url) && url.trim() !== "" && !imageErrors[index] && (
-              <img
-                src={url}
-                alt={`Vista previa ${index + 1}`}
-                className="mt-2 w-32 h-auto border rounded"
-                onError={(e) => (e.currentTarget.style.display = "none")}
-              />
-             )}
-              </div>
-             ))}
+              {(formData.imageUrls ?? []).map((url, index) => (
+                <div key={index} className="mb-4">
+                  <input
+                    type="text"
+                    value={url}
+                    onChange={(e) => handlePhotoUrlChange(index, e.target.value)}
+                    placeholder={`URL de la imagen ${index + 1}`}
+                    className={`block w-full p-3 border rounded-2xl shadow-sm ${imageErrors[index] ? "border-red-500" : "border-gray-300"
+                      }`}
+                  />
+                  {imageErrors[index] && (
+                    <p className="text-red-500 text-sm mt-1">{imageErrors[index]}</p>
+                  )}
+                  {/* {extensionesValidas.test(url) && url.trim() !== "" && !imageErrors[index] && (
+                    <img
+                      src={url}
+                      alt={`Vista previa ${index + 1}`}
+                      className="mt-2 w-32 h-auto border rounded"
+                      onError={(e) => (e.currentTarget.style.display = "none")}
+                    />
+                  )} */}
+                </div>
+              ))}
             </div>
           </div>
 

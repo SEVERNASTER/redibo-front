@@ -46,6 +46,7 @@ export default function MyCars() {
     model: "",
     carType: "",
     transmission: "",
+    availability: "",
     sortBy: "",
     page: 1,
     limit: 4,
@@ -176,12 +177,6 @@ export default function MyCars() {
   }, [filters, token, role, isOnline]);
 
 
-
-  
-
-
-
-
   if (!token || role !== "host") {
     return (
       <div className="text-center p-4">
@@ -245,6 +240,7 @@ export default function MyCars() {
             model: "",
             carType: "",
             transmission: "",
+            availability: "",
             sortBy: "",
             page: 1,
           }))

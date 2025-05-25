@@ -158,6 +158,8 @@ export default function AddCar() {
   const start = dateRange[0]?.startDate;
   const end = dateRange[0]?.endDate;
   const intermediateDates = getIntermediateDates(start, end);
+  const [showToast, setShowToast] = useState(false);
+
 
   const validarCamposObligatorios = () => {
     let errores = false;
@@ -724,7 +726,12 @@ export default function AddCar() {
               </button>
               <button
                 type="button"
-                onClick={handleSaveAvailability}
+                onClick={() => {
+                  setIsCalendarOpen(false);
+                  setShowToast(true);
+                  setTimeout(() => setShowToast(false), 4000);
+                  handleSaveAvailability();
+                }}
                 className="bg-orange-500 text-white px-8 py-2 rounded"
               >
                 Guardar
@@ -733,6 +740,22 @@ export default function AddCar() {
           </div>
         </div>
       )}
+
+          {}
+          {showToast && (
+          <div className="fixed top-5 left-1/2 transform -translate-x-1/2 px-6 py-4 rounded-lg shadow-lg z-50 flex justify-between items-center min-w-[300px] font-bold"
+              style={{ backgroundColor: '#FDD9A0', color: '#333' }}>
+            <span>Disponibilidad actualizada exitosamente</span>
+            <button
+              onClick={() => setShowToast(false)}
+              className="ml-4 bg-white text-black px-4 py-2 rounded-full hover:bg-gray-100"
+            >
+              Aceptar
+            </button>
+          </div>
+        )}
+
+
 
       <div className="flex justify-end gap-4 mt-6">
         <button

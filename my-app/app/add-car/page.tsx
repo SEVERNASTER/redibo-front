@@ -125,6 +125,22 @@ export default function AddCar() {
       }));
     }
   };
+  const getIntermediateDates = (start: Date | undefined, end: Date | undefined): string[] => {
+      if (!start || !end) return [];
+
+      const dates: string[] = [];
+      const current = new Date(start);
+      current.setDate(current.getDate() + 1);
+
+      while (current < end) {
+        dates.push(current.toDateString());
+        current.setDate(current.getDate() + 1);
+      }
+
+      return dates;
+    };
+
+
 
   const [brandError, setBrandError] = useState('');
   const [modelError, setModelError] = useState('');
@@ -139,6 +155,9 @@ export default function AddCar() {
   const [colorError, setColorError] = useState<string>('');
   const [seatsError, setSeatsError] = useState('');
   const [priceError, setPriceError] = useState('');
+  const start = dateRange[0]?.startDate;
+  const end = dateRange[0]?.endDate;
+  const intermediateDates = getIntermediateDates(start, end);
 
   const validarCamposObligatorios = () => {
     let errores = false;
@@ -655,7 +674,27 @@ export default function AddCar() {
               months={2}
               direction="horizontal"
               rangeColors={['#3b82f6']}
+              dayContentRenderer={(date) => {
+                const dateStr = date.toDateString();
+                const isIntermediate = intermediateDates.includes(dateStr);
+                return (
+                  <div
+                    style={{
+                    backgroundColor: isIntermediate ? '#d1d5db' : undefined,
+                    width: '3rem',             
+                    height: '1.5rem',          
+                    lineHeight: '1.5rem',      
+                    textAlign: 'center',
+                    margin: '0.5rem 0',        
+                    color: 'black' 
+                  }}
+                  >
+                    {date.getDate()}
+                  </div>
+                );
+              }}
             />
+
             <div className="mt-4">
               <label className="block text-gray-600 mb-2">¿El vehículo está disponible?</label>
               <div className="flex gap-4">

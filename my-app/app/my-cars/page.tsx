@@ -1,6 +1,6 @@
 "use client";
 import toast, { Toaster } from "react-hot-toast";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import FiltrosHost from "../components/FiltrosHost";
 import Paginacion from "../components/Paginacion";
@@ -33,7 +33,11 @@ interface CarsResponse {
   totalPages: number;
 }
 
+
 export default function MyCars() {
+  const cancelButtonRef = useRef<HTMLButtonElement>(null);
+  const confirmButtonRef = useRef<HTMLButtonElement>(null);
+  const [carToDelete, setCarToDelete] = useState<Car | null>(null);
   const { token, role, logout } = useAuth();
   const [carsResponse, setCarsResponse] = useState<CarsResponse>({
     cars: [],
@@ -102,6 +106,32 @@ export default function MyCars() {
     }
   };
 
+  useEffect(() => {
+  const handleKeyDown = (e: KeyboardEvent) => {
+    if (!carToDelete) return;
+
+    if (e.key === "Tab") {
+      e.preventDefault();
+      if (e.shiftKey) {
+        if (document.activeElement === cancelButtonRef.current) {
+          confirmButtonRef.current?.focus();
+        } else {
+          cancelButtonRef.current?.focus();
+        }
+      } else {
+        if (document.activeElement === confirmButtonRef.current) {
+          cancelButtonRef.current?.focus();
+        } else {
+          confirmButtonRef.current?.focus();
+        }
+      }
+    }
+  };
+
+  document.addEventListener("keydown", handleKeyDown);
+  return () => document.removeEventListener("keydown", handleKeyDown);
+}, [carToDelete]);
+
   // funcion para que verifique los fltors activos
   const hayFiltrosActivos = () => {
     return (
@@ -112,27 +142,25 @@ export default function MyCars() {
       filters.model !== ""
     );
   };
+
   // función para eliminar un auto
   const handleDeleteCar = async (carId: number) => {
-    if (!token) return;
+  if (!token) return;
 
-    try {
-      await deleteCar(carId, token);
-      setCarsResponse((prev) => ({
-        ...prev,
-        cars: prev.cars.filter((car) => car.id !== carId),
-        totalCars: prev.totalCars - 1,
-      }));
-
-      // Mensaje de éxito después de eliminar
-      toast.success("¡Auto eliminado exitosamente!");
-    } catch (err: any) {
-      setError(err.response?.data?.error || "Error al eliminar el auto");
-      toast.error("Error al eliminar el auto");
-    }
-  };
-
-
+  try {
+    await deleteCar(carId, token);
+    setCarsResponse((prev) => ({
+      ...prev,
+      cars: prev.cars.filter((car) => car.id !== carId),
+      totalCars: prev.totalCars - 1,
+    }));
+    toast.success("Auto eliminado exitosamente!!");
+  } catch (err: any) {
+    const msg = err.response?.data?.error || "Error al eliminar el auto";
+    setError(msg);
+    toast.error(msg); 
+  }
+};
 
   const [isOnline, setIsOnline] = useState(true);
 
@@ -146,7 +174,6 @@ export default function MyCars() {
     window.addEventListener("online", handleOnline);
     window.addEventListener("offline", handleOffline);
 
-    // Estado inicial
     if (!navigator.onLine) {
       setIsOnline(false);
       setError("Error al filtrar. Intenta de nuevo");
@@ -167,7 +194,7 @@ export default function MyCars() {
       try {
         const response = await fetchMyCars(filters, token);
         setCarsResponse(response);
-        setError(""); // limpiar errores anteriores
+        setError(""); 
       } catch (err: any) {
         setError(err.response?.data?.error || "Error al cargar los autos");
       }
@@ -331,12 +358,12 @@ export default function MyCars() {
                     {/* Eliminar */}
                     <div className="flex flex-col items-center">
                       <button
-                        onClick={() => handleDeleteCar(car.id)}
+                        onClick={() => setCarToDelete(car)}
                         className="bg-orange-500 text-white p-3 rounded-full hover:bg-red-600 ml-5"
                       >
-                        <FaTrash />
+                       <FaTrash />
                       </button>
-                      <span className="text-gray-700 mt-1 ml-5">Eliminar</span>
+                        <span className="text-gray-700 mt-1 ml-5">Eliminar</span>
                     </div>
                   </div>
                 </div>
@@ -379,17 +406,58 @@ export default function MyCars() {
                 </button>
 
                 <button
-  type="button"
-  className="border border-blue-500 text-blue-500 px-4 py-2 rounded hover:bg-blue-50 transition"
->
-  Calendario
-</button>
+                 type="button"
+                 className="border border-blue-500 text-blue-500 px-4 py-2 rounded hover:bg-blue-50 transition"
+                >
+                        Calendario
+                </button>
 
               </div>
             </div>
           </div>
         )
       }
+
+    //mensaje de confirmación
+      {carToDelete && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center">
+    
+    {/* Overlay oscuro */}
+    <div
+      className="absolute inset-0 bg-black bg-opacity-40"
+      onClick={() => setCarToDelete(null)} 
+    ></div>
+
+    {/* Modal */}
+    <div className="relative bg-orange-300 border border-orange-500 text-gray-800 shadow-xl px-6 py-5 rounded-xl w-[90%] max-w-md z-50">
+      <p className="text-md font-medium mb-4 text-center">
+        ¿Estás seguro de que deseas eliminar este auto? Esta acción no se puede deshacer.
+      </p>
+      <div className="flex justify-center gap-6">
+         <button
+          ref={cancelButtonRef}
+          onClick={() => setCarToDelete(null)}
+          className="bg-white text-orange-600 px-4 py-2 rounded-full border border-orange-400 hover:bg-orange-100 transition
+                     focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+        >
+          cancelar
+        </button>
+        <button
+          ref={confirmButtonRef}
+          onClick={async () => {
+            await handleDeleteCar(carToDelete.id);
+            setCarToDelete(null);
+          }}
+          className="bg-orange-600 text-white px-4 py-2 rounded-full hover:bg-orange-700 transition
+                     focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
+        >
+          confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
 
       <Paginacion
         currentPage={carsResponse.currentPage}

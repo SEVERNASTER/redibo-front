@@ -420,38 +420,38 @@ export default function MyCars() {
 
     //mensaje de confirmación
       {carToDelete && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center">
+       <div className="fixed inset-0 z-50 flex items-center justify-center">
     
-    {/* Overlay oscuro */}
-    <div
-      className="absolute inset-0 bg-black bg-opacity-40"
-      onClick={() => setCarToDelete(null)} 
-    ></div>
+         {/* Overlay oscuro */}
+        <div
+             className="absolute inset-0 bg-black bg-opacity-40"
+             onClick={() => setCarToDelete(null)} 
+         ></div>
 
-    {/* Modal */}
-    <div className="relative bg-orange-300 border border-orange-500 text-gray-800 shadow-xl px-6 py-5 rounded-xl w-[90%] max-w-md z-50">
-      <p className="text-md font-medium mb-4 text-center">
-        ¿Estás seguro de que deseas eliminar este auto? Esta acción no se puede deshacer.
-      </p>
-      <div className="flex justify-center gap-6">
-         <button
-          ref={cancelButtonRef}
-          onClick={() => setCarToDelete(null)}
-          className="bg-white text-orange-600 px-4 py-2 rounded-full border border-orange-400 hover:bg-orange-100 transition
+         {/* Modal */}
+         <div className="relative bg-orange-300 border border-orange-500 text-gray-800 shadow-xl px-6 py-5 rounded-xl w-[90%] max-w-md z-50">
+           <p className="text-md font-medium mb-4 text-center">
+              {`${carToDelete.brand} ${carToDelete.model} ${carToDelete.year}, ¿Estás seguro de que deseas eliminar este auto? Esta acción no se puede deshacer.`}
+            </p>
+             <div className="flex justify-center gap-6">
+              <button
+                 ref={cancelButtonRef}
+                 onClick={() => setCarToDelete(null)}
+                  className="bg-white text-orange-600 px-4 py-2 rounded-full border border-orange-400 hover:bg-orange-100 transition
                      focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
-        >
-          cancelar
-        </button>
-        <button
-          ref={confirmButtonRef}
-          onClick={async () => {
-            await handleDeleteCar(carToDelete.id);
-            setCarToDelete(null);
-          }}
-          className="bg-orange-600 text-white px-4 py-2 rounded-full hover:bg-orange-700 transition
+              >
+               cancelar
+              </button>
+              <button
+                 ref={confirmButtonRef}
+                 onClick={async () => {
+                   await handleDeleteCar(carToDelete.id);
+                    setCarToDelete(null);
+                 }}
+                 className="bg-orange-600 text-white px-4 py-2 rounded-full hover:bg-orange-700 transition
                      focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
-        >
-          confirmar
+               >
+                confirmar
         </button>
       </div>
     </div>

@@ -49,7 +49,7 @@ export default function MyCars() {
     model: "",
     carType: "",
     transmission: "",
-    availability: "",
+    availability: undefined,
     sortBy: "",
     page: 1,
     limit: 4,
@@ -138,7 +138,8 @@ export default function MyCars() {
       filters.carType !== "" ||
       filters.transmission !== "" ||
       filters.sortBy !== "" ||
-      filters.model !== ""
+      filters.model !== ""||
+      filters.availability!==undefined 
     );
   };
 
@@ -261,7 +262,7 @@ export default function MyCars() {
             model: "",
             carType: "",
             transmission: "",
-            availability: "",
+            isAvailable: undefined,
             sortBy: "",
             page: 1,
           }))
@@ -410,7 +411,7 @@ export default function MyCars() {
           </div>
         </div>
       )}
-      //mensaje de confirmación
+      
       {carToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           {/* Overlay oscuro */}

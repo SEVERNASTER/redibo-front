@@ -4,7 +4,7 @@ import { FaTrash } from "react-icons/fa";
 
 interface FiltersProps {
   filters: {
-    availability: any;
+    isAvailable?: boolean;
     brand: string;
     model: string;
     carType: string;
@@ -28,11 +28,9 @@ const FiltrosHost: React.FC<FiltersProps> = ({
       filters.carType !== "" ||
       filters.transmission !== "" ||
       filters.sortBy !== "" ||
-      filters.availability !== ""
+      filters.isAvailable !== undefined
     );
   };
-
-
 
   return (
     <div className=" p-4 rounded-lg mb-4 shadow-sm">
@@ -101,15 +99,15 @@ const FiltrosHost: React.FC<FiltersProps> = ({
             </select>
           )}
 
-          {filters.availability ? (
+          {filters.isAvailable ? (
             <div className="flex items-center bg-orange-500 text-white rounded-full px-3 py-1 w-full justify-between">
               <span className="truncate capitalize">
-                {filters.availability === "available"
-                  ? "Disponible"
-                  : "No disponible"}
+                {filters.isAvailable === true 
+                ? "Disponible" 
+                : "No disponible"}
               </span>
               <button
-                onClick={() => onFilterChange({ availability: "" })}
+                onClick={() => onFilterChange({ isAvailable: undefined  })}
                 className="ml-2 text-white hover:text-gray-200 font-bold"
               >
                 ×
@@ -117,8 +115,21 @@ const FiltrosHost: React.FC<FiltersProps> = ({
             </div>
           ) : (
             <select
-              value={filters.availability}
-              onChange={(e) => onFilterChange({ availability: e.target.value })}
+              value={
+                filters.isAvailable === true
+                  ? "available"
+                  : filters.isAvailable === false
+                  ? "notAvailable"
+                  : ""
+              }
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "available")
+                  onFilterChange({ isAvailable: true });
+                else if (value === "notAvailable")
+                  onFilterChange({ isAvailable: false });
+                else onFilterChange({ isAvailable: undefined }); 
+              }}
               className="p-2 border rounded w-full"
             >
               <option value="">Disponibilidad</option>
@@ -126,7 +137,6 @@ const FiltrosHost: React.FC<FiltersProps> = ({
               <option value="notAvailable">No disponible</option>
             </select>
           )}
-
 
           {hayFiltrosActivos() && (
             <button

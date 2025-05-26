@@ -338,7 +338,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
           <button
             type="button"
             onClick={() => onFilterChange({ ...filters, search: searchInput.trim() })}
-            className="bg-[#FBE7C2] px-6 py-2 font-semibold text-xs text-gray-700"
+            className="bg-[#FBE7C2] px-6 py-2 font-semibold text-[15px] text-gray-700"
           >
             Buscar
           </button>
@@ -351,12 +351,12 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
               value={searchInput}
               onChange={handleSearchInput}
               onKeyDown={(e) => {
-                 if (e.key === "Enter") {
-                    onFilterChange({ ...filters, search: searchInput.trim() });
-                    setShowSuggestions(false); // Ocultar sugerencias al buscar
-                 }
+                if (e.key === "Enter") {
+                  onFilterChange({ ...filters, search: searchInput.trim() });
+                  setShowSuggestions(false); // Ocultar sugerencias al buscar
+                }
               }}
-              className="w-full px-4 py-2 bg-[#F9F1E7] text-xs text-gray-800 placeholder-gray-400 focus:outline-none"
+              className="w-full h-[50px] text-[18px] px-4 py-2 bg-[#F9F1E7] text-xs text-gray-800 placeholder-gray-400 focus:outline-none"
               maxLength={50}
             />
             <span className="absolute right-2 top-1/2 -translate-y-1/2 text-[0.75rem] text-orange-500">

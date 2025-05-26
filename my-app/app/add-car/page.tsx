@@ -353,7 +353,14 @@ export default function AddCar() {
       if (!response.ok) {
         throw new Error(data.error || "Error al añadir el auto");
       }
+
+      const carId = data.car?.id || data.id;
+      if (dateRange[0].startDate && dateRange[0].endDate && isAvailable !== null) {
+        await handleSaveAvailability(carId);
+      }
       toast.success("¡Se guardó correctamente!");
+      console.log("isAvailable:", isAvailable);
+      console.log("carId:", carId)
       router.push("/my-cars");
     } catch (err: any) {
       setError(err.message);
@@ -361,7 +368,7 @@ export default function AddCar() {
   };
 
   // Función para guardar la disponibilidad
-  const handleSaveAvailability = async () => {
+  const handleSaveAvailability = async (carId: number) => {
   if (isAvailable === null) {
     toast.error("Por favor selecciona si el vehículo está disponible o no");
     return;
@@ -375,6 +382,7 @@ export default function AddCar() {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
+        carId,
         startDate: dateRange[0].startDate,
         endDate: dateRange[0].endDate,
         status: isAvailable,  // aquí enviamos un booleano
@@ -734,8 +742,7 @@ export default function AddCar() {
                 onClick={() => {
                   setIsCalendarOpen(false);
                   setShowToast(true);
-                  setTimeout(() => setShowToast(false), 4000);
-                  handleSaveAvailability();
+                  setTimeout(() => setShowToast(false), 4000);  
                 }}
                 className="bg-orange-500 text-white px-8 py-2 rounded"
               >

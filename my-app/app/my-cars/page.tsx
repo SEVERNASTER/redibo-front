@@ -21,7 +21,7 @@ interface Car {
   transmission: string;
   color: string;
   imageUrl: string;
-  isAvailable: boolean;
+  isAvailable: boolean | string;
   unavailableDates: string[];
   extraEquipment: string[];
 }
@@ -49,7 +49,7 @@ export default function MyCars() {
     model: "",
     carType: "",
     transmission: "",
-    availability: undefined,
+    availability: "",
     sortBy: "",
     page: 1,
     limit: 4,
@@ -138,8 +138,7 @@ export default function MyCars() {
       filters.carType !== "" ||
       filters.transmission !== "" ||
       filters.sortBy !== "" ||
-      filters.model !== ""||
-      filters.availability!==undefined 
+      filters.model !== ""
     );
   };
 
@@ -262,7 +261,7 @@ export default function MyCars() {
             model: "",
             carType: "",
             transmission: "",
-            isAvailable: undefined,
+            availability: "",
             sortBy: "",
             page: 1,
           }))
@@ -305,10 +304,10 @@ export default function MyCars() {
 
                 <p
                   className={`text-sm font-medium mt-2 ${
-                    car.isAvailable === true ? "text-green-600" : "text-red-600"
+                    car.isAvailable === true || car.isAvailable === "true" ? "text-green-600" : "text-red-600"
                   }`}
                 >
-                  {car.isAvailable === true
+                  {car.isAvailable === true || car.isAvailable === "disponible" 
                     ? "🟢 Disponible"
                     : "🔴 No disponible"}
                 </p>
@@ -411,7 +410,7 @@ export default function MyCars() {
           </div>
         </div>
       )}
-      
+      {/* mensaje de confirmación */}
       {carToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           {/* Overlay oscuro */}
@@ -456,5 +455,4 @@ export default function MyCars() {
       />
     </div>
   );
-  //corregido
 }

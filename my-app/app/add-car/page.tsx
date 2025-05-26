@@ -48,7 +48,9 @@ export default function AddCar() {
       key: 'selection',
     },
   ]);
-  const [availabilityStatus, setAvailabilityStatus] = useState<'available' | 'unavailable' | null>(null);
+  const [availabilityStatus, setAvailabilityStatus] = useState<boolean | null>(null); // ✅ boolean
+  const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
+
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -126,19 +128,19 @@ export default function AddCar() {
     }
   };
   const getIntermediateDates = (start: Date | undefined, end: Date | undefined): string[] => {
-      if (!start || !end) return [];
+    if (!start || !end) return [];
 
-      const dates: string[] = [];
-      const current = new Date(start);
+    const dates: string[] = [];
+    const current = new Date(start);
+    current.setDate(current.getDate() + 1);
+
+    while (current < end) {
+      dates.push(current.toDateString());
       current.setDate(current.getDate() + 1);
+    }
 
-      while (current < end) {
-        dates.push(current.toDateString());
-        current.setDate(current.getDate() + 1);
-      }
-
-      return dates;
-    };
+    return dates;
+  };
 
 
 
@@ -360,38 +362,39 @@ export default function AddCar() {
 
   // Función para guardar la disponibilidad
   const handleSaveAvailability = async () => {
-    if (!availabilityStatus) {
-      toast.error("Por favor selecciona si el vehículo está disponible o no");
-      return;
+  if (isAvailable === null) {
+    toast.error("Por favor selecciona si el vehículo está disponible o no");
+    return;
+  }
+  try {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL;
+    const response = await fetch(`${API_URL}/availability`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        startDate: dateRange[0].startDate,
+        endDate: dateRange[0].endDate,
+        status: isAvailable,  // aquí enviamos un booleano
+      }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || "Error al actualizar disponibilidad");
     }
-    try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL;
-      const response = await fetch(`${API_URL}/availability`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          startDate: dateRange[0].startDate,
-          endDate: dateRange[0].endDate,
-          status: availabilityStatus,
-        }),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Error al actualizar disponibilidad");
-      }
-      toast.success("Disponibilidad actualizada exitosamente");
-      setIsCalendarOpen(false);
-    } catch (err: any) {
-      if (err.message.includes("reservas activas")) {
-        toast.error("No puedes modificar estas fechas porque tienen reservas activas");
-      } else {
-        toast.error("Error al actualizar, intenta de nuevo");
-      }
+    toast.success("Disponibilidad actualizada exitosamente");
+    setIsCalendarOpen(false);
+  } catch (err: any) {
+    if (err.message.includes("reservas activas")) {
+      toast.error("No puedes modificar estas fechas porque tienen reservas activas");
+    } else {
+      toast.error("Error al actualizar, intenta de nuevo");
     }
-  };
+  }
+};
+
 
   return (
     <div className="container mx-auto p-4">
@@ -521,7 +524,7 @@ export default function AddCar() {
               }}
               className={`border p-3 rounded w-full ${priceError ? 'border-red-500' : 'border-gray-300'}`}
               min="5"
-              max="100"
+            // max="100"
             />
             {priceError && <p className="text-red-500 text-sm mt-1">{priceError}</p>}
           </div>
@@ -682,14 +685,14 @@ export default function AddCar() {
                 return (
                   <div
                     style={{
-                    backgroundColor: isIntermediate ? '#d1d5db' : undefined,
-                    width: '3rem',             
-                    height: '1.5rem',          
-                    lineHeight: '1.5rem',      
-                    textAlign: 'center',
-                    margin: '0.5rem 0',        
-                    color: 'black' 
-                  }}
+                      backgroundColor: isIntermediate ? '#d1d5db' : undefined,
+                      width: '3rem',
+                      height: '1.5rem',
+                      lineHeight: '1.5rem',
+                      textAlign: 'center',
+                      margin: '0.5rem 0',
+                      color: 'black'
+                    }}
                   >
                     {date.getDate()}
                   </div>
@@ -702,20 +705,22 @@ export default function AddCar() {
               <div className="flex gap-4">
                 <button
                   type="button"
-                  onClick={() => setAvailabilityStatus('available')}
-                  className={`px-4 py-2 rounded ${availabilityStatus === 'available' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                  onClick={() => setIsAvailable(true)}
+                  className={`px-4 py-2 rounded ${isAvailable ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
                 >
                   Sí
                 </button>
                 <button
                   type="button"
-                  onClick={() => setAvailabilityStatus('unavailable')}
-                  className={`px-4 py-2 rounded ${availabilityStatus === 'unavailable' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                  onClick={() => setIsAvailable(false)}
+                  className={`px-4 py-2 rounded ${isAvailable === false ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
                 >
                   No
                 </button>
+
               </div>
             </div>
+
             <div className="flex justify-end gap-4 mt-6">
               <button
                 type="button"
@@ -741,19 +746,19 @@ export default function AddCar() {
         </div>
       )}
 
-          {}
-          {showToast && (
-          <div className="fixed top-5 left-1/2 transform -translate-x-1/2 px-6 py-4 rounded-lg shadow-lg z-50 flex justify-between items-center min-w-[300px] font-bold"
-              style={{ backgroundColor: '#FDD9A0', color: '#333' }}>
-            <span>Disponibilidad actualizada exitosamente</span>
-            <button
-              onClick={() => setShowToast(false)}
-              className="ml-4 bg-white text-black px-4 py-2 rounded-full hover:bg-gray-100"
-            >
-              Aceptar
-            </button>
-          </div>
-        )}
+      { }
+      {showToast && (
+        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 px-6 py-4 rounded-lg shadow-lg z-50 flex justify-between items-center min-w-[300px] font-bold"
+          style={{ backgroundColor: '#FDD9A0', color: '#333' }}>
+          <span>Disponibilidad actualizada exitosamente</span>
+          <button
+            onClick={() => setShowToast(false)}
+            className="ml-4 bg-white text-black px-4 py-2 rounded-full hover:bg-gray-100"
+          >
+            Aceptar
+          </button>
+        </div>
+      )}
 
 
 

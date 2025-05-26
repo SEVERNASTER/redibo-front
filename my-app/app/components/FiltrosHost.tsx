@@ -102,12 +102,12 @@ const FiltrosHost: React.FC<FiltersProps> = ({
           {filters.isAvailable ? (
             <div className="flex items-center bg-orange-500 text-white rounded-full px-3 py-1 w-full justify-between">
               <span className="truncate capitalize">
-                {filters.isAvailable === true 
-                ? "Disponible" 
-                : "No disponible"}
+                {filters.isAvailable === true
+                  ? "Disponible"
+                  : "No disponible"}
               </span>
               <button
-                onClick={() => onFilterChange({ isAvailable: undefined  })}
+                onClick={() => onFilterChange({ isAvailable: undefined })}
                 className="ml-2 text-white hover:text-gray-200 font-bold"
               >
                 ×
@@ -116,19 +116,16 @@ const FiltrosHost: React.FC<FiltersProps> = ({
           ) : (
             <select
               value={
-                filters.isAvailable === true
-                  ? "available"
-                  : filters.isAvailable === false
-                  ? "notAvailable"
-                  : ""
+                filters.isAvailable === false ? "notAvailable" : "available"
               }
+
               onChange={(e) => {
                 const value = e.target.value;
                 if (value === "available")
                   onFilterChange({ isAvailable: true });
                 else if (value === "notAvailable")
                   onFilterChange({ isAvailable: false });
-                else onFilterChange({ isAvailable: undefined }); 
+                else onFilterChange({ isAvailable: undefined });
               }}
               className="p-2 border rounded w-full"
             >

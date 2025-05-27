@@ -336,14 +336,19 @@ export default function EditCar() {
               <div className="flex gap-4">
                 <button
                   type="button"
-                  onClick={() =>(true)}
+                  className={`px-4 py-2 rounded ${
+                    formData.isAvailable ? "bg-green-500 text-white" : "bg-gray-200"
+                  }`}
+                  onClick={() => setFormData((prev) => ({ ...prev, isAvailable: true }))}
                 >
                   Sí
                 </button>
                 <button
                   type="button"
-                  onClick={() =>(false)}
-                  className={`px-4 py-2 rounded 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                  className={`px-4 py-2 rounded ${
+                    formData.isAvailable === false ? "bg-red-500 text-white" : "bg-gray-200"
+                  }`}
+                  onClick={() => setFormData((prev) => ({ ...prev, isAvailable: false }))}
                 >
                   No
                 </button>

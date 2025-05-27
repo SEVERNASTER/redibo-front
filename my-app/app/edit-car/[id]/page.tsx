@@ -335,6 +335,8 @@ export default function EditCar() {
                 </p>
               )}
 
+              {/* cambio de estado*/}
+
               <div className="mt-4">
                 <label className="block text-gray-600 mb-2">¿El vehículo está disponible?</label>
                 <div className="flex gap-4">

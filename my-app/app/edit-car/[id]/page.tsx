@@ -330,6 +330,26 @@ export default function EditCar() {
                   {formErrors.fuelType}
                 </p>
               )}
+
+              <div className="mt-4">
+              <label className="block text-gray-600 mb-2">¿El vehículo está disponible?</label>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  onClick={() =>(true)}
+                >
+                  Sí
+                </button>
+                <button
+                  type="button"
+                  onClick={() =>(false)}
+                  className={`px-4 py-2 rounded 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+
             </div>
           </div>
           <div className="md:col-span-1">

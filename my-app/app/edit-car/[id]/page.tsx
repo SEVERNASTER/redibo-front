@@ -1,6 +1,6 @@
 "use client";
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { isValidElement, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchCarById, updateCar } from "../../lib/api";
 import { useAuth } from "../../lib/authContext";
@@ -43,6 +43,9 @@ export default function EditCar() {
     fuelType: "",
     transmission: "",
   });
+
+
+  const [disponible, setDisponible] = useState<boolean>(formData.isAvailable ?? true);
 
   const [imageErrors, setImageErrors] = useState<string[]>(["", "", "", "", ""]);
   const [error, setError] = useState<string | null>(null);
@@ -163,6 +166,7 @@ export default function EditCar() {
     const updatedFormData = {
       ...formData,
       imageUrls: validImageUrls,
+      isAvailable: disponible,
     };
 
     try {
@@ -332,23 +336,26 @@ export default function EditCar() {
               )}
 
               <div className="mt-4">
-              <label className="block text-gray-600 mb-2">¿El vehículo está disponible?</label>
-              <div className="flex gap-4">
-                <button
-                  type="button"
-                  onClick={() =>(true)}
-                >
-                  Sí
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>(false)}
-                  className={`px-4 py-2 rounded 'bg-blue-500 text-white' : 'bg-gray-200'}`}
-                >
-                  No
-                </button>
+                <label className="block text-gray-600 mb-2">¿El vehículo está disponible?</label>
+                <div className="flex gap-4">
+                  <button
+                    type="button"
+                    onClick={() => setDisponible(true)}
+                    className={`px-4 py-2 rounded border transition-colors duration-200 ${disponible === true ? "border-orange-500 text-orange-500" : "border-gray-300 text-gray-600"
+                      }`}
+                  >
+                    Sí
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setDisponible(false)}
+                    className={`px-4 py-2 rounded border transition-colors duration-200 ${disponible === false ? "border-orange-500 text-orange-500" : "border-gray-300 text-gray-600"
+                      }`}
+                  >
+                    No
+                  </button>
+                </div>
               </div>
-            </div>
 
             </div>
           </div>
@@ -400,7 +407,7 @@ export default function EditCar() {
           </div>
 
           {/* Botones */}
-          <div className="flex justify-end gap-4 mt-6">
+          <div className="flex justify-end gap-4 mt-6 ">
             <button
               type="button"
               className="border border-orange-500 text-orange-500 px-8 py-2 rounded"

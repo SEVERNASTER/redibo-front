@@ -51,7 +51,6 @@ export default function AddCar() {
   const [availabilityStatus, setAvailabilityStatus] = useState<boolean | null>(null); // ✅ boolean
   const [isAvailable, setIsAvailable] = useState<boolean | null>(null);
 
-
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -127,6 +126,7 @@ export default function AddCar() {
       }));
     }
   };
+
   const getIntermediateDates = (start: Date | undefined, end: Date | undefined): string[] => {
     if (!start || !end) return [];
 
@@ -141,8 +141,6 @@ export default function AddCar() {
 
     return dates;
   };
-
-
 
   const [brandError, setBrandError] = useState('');
   const [modelError, setModelError] = useState('');
@@ -161,7 +159,6 @@ export default function AddCar() {
   const end = dateRange[0]?.endDate;
   const intermediateDates = getIntermediateDates(start, end);
   const [showToast, setShowToast] = useState(false);
-
 
   const validarCamposObligatorios = () => {
     let errores = false;
@@ -369,40 +366,39 @@ export default function AddCar() {
 
   // Función para guardar la disponibilidad
   const handleSaveAvailability = async (carId: number) => {
-  if (isAvailable === null) {
-    toast.error("Por favor selecciona si el vehículo está disponible o no");
-    return;
-  }
-  try {
-    const API_URL = process.env.NEXT_PUBLIC_API_URL;
-    const response = await fetch(`${API_URL}/availability`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        carId,
-        startDate: dateRange[0].startDate,
-        endDate: dateRange[0].endDate,
-        status: isAvailable,  // aquí enviamos un booleano
-      }),
-    });
-    const data = await response.json();
-    if (!response.ok) {
-      throw new Error(data.error || "Error al actualizar disponibilidad");
+    if (isAvailable === null) {
+      toast.error("Por favor selecciona si el vehículo está disponible o no");
+      return;
     }
-    toast.success("Disponibilidad actualizada exitosamente");
-    setIsCalendarOpen(false);
-  } catch (err: any) {
-    if (err.message.includes("reservas activas")) {
-      toast.error("No puedes modificar estas fechas porque tienen reservas activas");
-    } else {
-      toast.error("Error al actualizar, intenta de nuevo");
+    try {
+      const API_URL = process.env.NEXT_PUBLIC_API_URL;
+      const response = await fetch(`${API_URL}/availability`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          carId,
+          startDate: dateRange[0].startDate,
+          endDate: dateRange[0].endDate,
+          status: isAvailable,  // aquí enviamos un booleano
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || "Error al actualizar disponibilidad");
+      }
+      toast.success("Disponibilidad actualizada  exitosamente");
+      setIsCalendarOpen(false);
+    } catch (err: any) {
+      if (err.message.includes("reservas activas")) {
+        toast.error("No puedes modificar estas fechas porque tienen reservas activas");
+      } else {
+        toast.error("Error al actualizar, intenta de nuevo");
+      }
     }
-  }
-};
-
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -532,7 +528,6 @@ export default function AddCar() {
               }}
               className={`border p-3 rounded w-full ${priceError ? 'border-red-500' : 'border-gray-300'}`}
               min="5"
-            // max="100"
             />
             {priceError && <p className="text-red-500 text-sm mt-1">{priceError}</p>}
           </div>
@@ -639,22 +634,11 @@ export default function AddCar() {
                 value={url}
                 onChange={(e) => handlePhotoUrlChange(idx, e.target.value)}
                 placeholder={`URL de la foto ${idx + 1}`}
-                className={`mt-1 block w-full p-2 border rounded ${imageErrors[idx] ? "border-red-500" : "border-gray-300"
-                  }`}
+                className={`mt-1 block w-full p-2 border rounded ${imageErrors[idx] ? "border-red-500" : "border-gray-300"}`}
               />
               {imageErrors[idx] && (
                 <p className="text-red-500 text-sm mt-1">{imageErrors[idx]}</p>
               )}
-              {/* {extensionesValidas.test(url) &&
-                url.trim() !== "" &&
-                !imageErrors[idx] && (
-                  <img
-                    src={url}
-                    alt={`Foto ${idx + 1}`}
-                    className="w-32 h-auto mt-2 border rounded"
-                    onError={(e) => (e.currentTarget.style.display = "none")}
-                  />
-                )} */}
             </div>
           ))}
 
@@ -725,7 +709,6 @@ export default function AddCar() {
                 >
                   No
                 </button>
-
               </div>
             </div>
 
@@ -753,21 +736,29 @@ export default function AddCar() {
         </div>
       )}
 
-      { }
       {showToast && (
-        <div className="fixed top-5 left-1/2 transform -translate-x-1/2 px-6 py-4 rounded-lg shadow-lg z-50 flex justify-between items-center min-w-[300px] font-bold"
-          style={{ backgroundColor: '#FDD9A0', color: '#333' }}>
-          <span>Disponibilidad actualizada exitosamente</span>
-          <button
-            onClick={() => setShowToast(false)}
-            className="ml-4 bg-white text-black px-4 py-2 rounded-full hover:bg-gray-100"
-          >
-            Aceptar
-          </button>
-        </div>
-      )}
-
-
+  <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+    <div className="bg-[#F9A23E] rounded-xl p-6 w-80 shadow-lg relative">
+      <button
+        onClick={() => setShowToast(false)}
+        className="absolute top-2 right-3 text-white font-bold text-lg"
+      >
+        ×
+      </button>
+      <p className="text-center text-gray-800 font-semibold mb-4">
+        Disponibilidad actualizada exitosamente en el calendario
+      </p>
+      <div className="flex justify-center">
+        <button
+          onClick={() => setShowToast(false)}
+          className="bg-white px-6 py-2 rounded-full text-[#F9A23E] font-semibold hover:bg-gray-100"
+        >
+          Aceptar
+        </button>
+      </div>
+    </div>
+  </div>
+)}
 
       <div className="flex justify-end gap-4 mt-6">
         <button

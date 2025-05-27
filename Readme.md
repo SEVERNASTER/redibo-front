@@ -137,8 +137,3 @@ Puedes consultar el repositorio de GitHub de Next.js](https://github.com/vercel/
 La forma más sencilla de implementar tu aplicación Next.js es usar la [Plataforma Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) de los creadores de Next.js.
 
 Consulta nuestra [Documentación de implementación de Next.js](https://nextjs.org/docs/app/building-your-application/deploying) para obtener más información.
-
-## Instalar para ejecutar el calendario 
-npm install react-hot-toast
-npm install react-date-range
-npm install react-datepicker

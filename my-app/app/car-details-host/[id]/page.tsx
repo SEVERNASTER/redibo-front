@@ -187,6 +187,7 @@ export default function CarDetails() {
             <span className="px-4 py-2 rounded-full bg-orange-100 text-black-700 text-sm">{car.category}</span>
             <span className="px-4 py-2 rounded-full bg-orange-100 text-black-700 text-sm">{car.seats} asientos</span>
             <span className="px-4 py-2 rounded-full bg-orange-100 text-black-700 text-sm">{car.licensePlate}</span>
+            <span className="px-4 py-2 rounded-full bg-orange-100 text-black-700 text-sm">{car.isAvailable}</span>
           </div>
 
           {/* Descripción */}

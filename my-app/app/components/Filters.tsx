@@ -371,6 +371,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
                 type="button"
                 onClick={() => {
                   // Limpiar búsqueda y ocultar sugerencias
+                  setSearchInput("");
                   onFilterChange({ ...filters, search: "" });
                   setShowSuggestions(false);
                 }}

@@ -325,11 +325,11 @@ export default function MyCars() {
                   <p>Categoría: {car.category}</p>
                   <p>Color: {car.color}</p>
                 </div>
-                {car.extraEquipment.length > 0 && (
+                {/* {car.extraEquipment.length > 0 && (
                   <p className="text-sm text-gray-600 mt-2">
                     Equipamiento: {car.extraEquipment.join(", ")}
                   </p>
-                )}
+                )} */}
 
                 {/* Acciones */}
                 <div className="flex gap-6 mt-4 text-sm text-center">

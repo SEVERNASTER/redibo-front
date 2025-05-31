@@ -11,7 +11,15 @@ interface Car {
   discount: number;
   rentalCount: number;
   rating: number;
-  location: string;
+  location: {
+    idUbicacion: number;
+    nombre: string;
+    departamento: string;
+    descripcion?: string;
+    latitud: number;
+    longitud: number;
+    esActiva: boolean;
+  }
   imageUrl: string[] | string; 
   host: {
     id: number;
@@ -46,7 +54,7 @@ return (
         <div className="px-2">
           <h2 className="text-xl font-semibold">{car.brand} {car.model}</h2>
           <p className="text-sm text-gray-600">Cant de rentas: {car.rentalCount}</p>
-          <p className="text-sm text-gray-600">{car.location}</p>
+          <p className="text-sm text-gray-600">{car.location?.nombre}, {car.location?.departamento}</p>
           <div className="flex justify-between items-center mt-1">
             <span className="text-lg font-bold text-black">{car.pricePerDay}$</span>
             <div className="flex items-center text-sm text-yellow-500">

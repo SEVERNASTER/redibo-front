@@ -344,26 +344,28 @@ export default function EditCar() {
               {/* cambio de estado*/}
 
               <div className="mt-4">
-                <label className="block text-gray-600 mb-2">¿El vehículo está disponible?</label>
-                <div className="flex gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setDisponible(true)}
-                    className={`px-4 py-2 rounded border transition-colors duration-200 ${disponible === true ? "border-orange-500 text-orange-500" : "border-gray-300 text-gray-600"
-                      }`}
-                  >
-                    Sí
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setDisponible(false)}
-                    className={`px-4 py-2 rounded border transition-colors duration-200 ${disponible === false ? "border-orange-500 text-orange-500" : "border-gray-300 text-gray-600"
-                      }`}
-                  >
-                    No
-                  </button>
-                </div>
+              <label className="block text-gray-600 mb-2">¿El vehículo está disponible?</label>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  className={`px-4 py-2 rounded ${
+                    formData.isAvailable ? "bg-green-500 text-white" : "bg-gray-200"
+                  }`}
+                  onClick={() => setFormData((prev) => ({ ...prev, isAvailable: true }))}
+                >
+                  Sí
+                </button>
+                <button
+                  type="button"
+                  className={`px-4 py-2 rounded ${
+                    formData.isAvailable === false ? "bg-red-500 text-white" : "bg-gray-200"
+                  }`}
+                  onClick={() => setFormData((prev) => ({ ...prev, isAvailable: false }))}
+                >
+                  No
+                </button>
               </div>
+            </div>
 
             </div>
           </div>

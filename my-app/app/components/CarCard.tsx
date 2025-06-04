@@ -1,4 +1,4 @@
-'use Client';
+'use client';
 import Link from 'next/link';
 
 interface Car {
@@ -7,13 +7,14 @@ interface Car {
   model: string;
   year: number;
   category: string;
-  pricePerDay: number;
+  pricePerDay: number | string;
   discount: number;
   rentalCount: number;
   rating: number;
-  location: string;
-  departamento: string;
-  imageUrl: string[] | string;
+  location: {
+    departamento: string;
+  };
+  imageUrl: { direccionImagen: string }[]; // Corregido aquí
   host: {
     id: number;
     email: string;
@@ -25,29 +26,26 @@ interface CarCardProps {
 }
 
 export default function CarCard({ car }: CarCardProps) {
+  // Extraer solo los enlaces de imagen
   const imageArray = Array.isArray(car.imageUrl)
-    ? car.imageUrl
-    : typeof car.imageUrl === 'string'
-      ? car.imageUrl.split(',').map((url) => url.trim()).filter((url) => url !== '')
-      : [];
-
-  console.log("Primera imagen:", Array.isArray(car.imageUrl) ? car.imageUrl[0] : car.imageUrl);
+    ? car.imageUrl.map((img) => img.direccionImagen)
+    : [];
 
   return (
     <Link href={`/car-details/${car.id}`}>
       <div className="border rounded-lg shadow-md p-4 bg-white hover:shadow-lg transition-shadow">
         <div className="w-full h-36 overflow-hidden rounded">
           <img
-            src={imageArray[0] || 'https://via.placeholder.com/300x200?text=Sin+imagen'}
+            src={imageArray[0]}
             alt={`${car.brand} ${car.model}`}
             className="w-full h-full object-cover"
           />
         </div>
 
-        <div className="px-2">
+        <div className="px-2 mt-2">
           <h2 className="text-xl font-semibold">{car.brand} {car.model}</h2>
           <p className="text-sm text-gray-600">Cant de rentas: {car.rentalCount}</p>
-          <p className="text-sm text-gray-600">{car.location.departamento}</p>
+          <p className="text-sm text-gray-600">{car.location?.departamento || 'Sin ubicación'}</p>
           <div className="flex justify-between items-center mt-1">
             <span className="text-lg font-bold text-black">{car.pricePerDay}$</span>
             <div className="flex items-center text-sm text-yellow-500">

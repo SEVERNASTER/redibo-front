@@ -292,13 +292,13 @@ export default function MyCars() {
                       ? car.imageUrl[0]
                       : typeof car.imageUrl === "string"
                       ? car.imageUrl.split(",")[0]?.trim()
-                      : "https://via.placeholder.com/300x200?text=Sin+imagen"
+                      : ""
                   }
                   alt={`${car.brand} ${car.model}`}
                   className="w-full h-40 object-cover rounded"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src =
-                      "https://via.placeholder.com/300x200?text=Sin+imagen";
+                      "";
                   }}
                 />
 

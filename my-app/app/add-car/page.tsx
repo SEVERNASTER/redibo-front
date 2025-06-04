@@ -340,6 +340,8 @@ export default function AddCar() {
         toast.error('El año no puede ser menor a 1900');
         throw new Error('El año no puede ser menor a 1900');
       }
+      console.log(formData);
+      
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const response = await fetch(`${API_URL}/cars`, {
         method: "POST",
@@ -576,7 +578,7 @@ export default function AddCar() {
             >
               <option value="">Seleccionar</option>
               <option value="Manual">Manual</option>
-              <option value="Automático">Automático</option>
+              <option value="Automatico">Automático</option>
             </select>
             {transmissionError && <p className="text-red-500 text-sm mt-1">{transmissionError}</p>}
           </div>

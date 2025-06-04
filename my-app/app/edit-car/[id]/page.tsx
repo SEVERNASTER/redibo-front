@@ -1,6 +1,6 @@
 "use client";
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
+import { isValidElement, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { fetchCarById, updateCar } from "../../lib/api";
 import { useAuth } from "../../lib/authContext";
@@ -43,6 +43,9 @@ export default function EditCar() {
     fuelType: "",
     transmission: "",
   });
+
+
+  const [disponible, setDisponible] = useState<boolean>(formData.isAvailable ?? true);
 
   const [imageErrors, setImageErrors] = useState<string[]>(["", "", "", "", ""]);
   const [error, setError] = useState<string | null>(null);
@@ -163,12 +166,19 @@ export default function EditCar() {
     const updatedFormData = {
       ...formData,
       imageUrls: validImageUrls,
+      isAvailable: disponible,
     };
 
     try {
       console.log("Datos a enviar:", updatedFormData);
       await updateCar(Number(id), updatedFormData, token);
-      toast.success("Auto editado con éxito !!");
+      toast.success("Auto editado con éxito!!!", {
+        style: {
+          background: "#F9A23E",
+          color: "#1F2937",
+          fontWeight: "600"
+        }
+      });
       router.push("/my-cars");
     } catch (err: any) {
       setError(err.response?.data?.error || "Error al actualizar el auto");
@@ -330,6 +340,33 @@ export default function EditCar() {
                   {formErrors.fuelType}
                 </p>
               )}
+
+              {/* cambio de estado*/}
+
+              <div className="mt-4">
+              <label className="block text-gray-600 mb-2">¿El vehículo está disponible?</label>
+              <div className="flex gap-4">
+                <button
+                  type="button"
+                  className={`px-4 py-2 rounded ${
+                    formData.isAvailable ? "bg-green-500 text-white" : "bg-gray-200"
+                  }`}
+                  onClick={() => setFormData((prev) => ({ ...prev, isAvailable: true }))}
+                >
+                  Sí
+                </button>
+                <button
+                  type="button"
+                  className={`px-4 py-2 rounded ${
+                    formData.isAvailable === false ? "bg-red-500 text-white" : "bg-gray-200"
+                  }`}
+                  onClick={() => setFormData((prev) => ({ ...prev, isAvailable: false }))}
+                >
+                  No
+                </button>
+              </div>
+            </div>
+
             </div>
           </div>
           <div className="md:col-span-1">
@@ -380,7 +417,7 @@ export default function EditCar() {
           </div>
 
           {/* Botones */}
-          <div className="flex justify-end gap-4 mt-6">
+          <div className="flex justify-end gap-4 mt-6 ">
             <button
               type="button"
               className="border border-orange-500 text-orange-500 px-8 py-2 rounded"

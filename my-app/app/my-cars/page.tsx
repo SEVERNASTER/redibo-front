@@ -241,7 +241,7 @@ export default function MyCars() {
         <h1 className="text-2xl font-bold">Mis Autos</h1>
         <div className="flex gap-4">
           <Link href="/add-car">
-            <button className="bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+            <button className="bg-[#fca311] text-white px-4 py-2 rounded hover:bg-[#f97316]">
               Agregar nuevo Auto
             </button>
           </Link>

@@ -99,41 +99,7 @@ const FiltrosHost: React.FC<FiltersProps> = ({
             </select>
           )}
 
-          {filters.isAvailable ? (
-            <div className="flex items-center bg-orange-500 text-white rounded-full px-3 py-1 w-full justify-between">
-              <span className="truncate capitalize">
-                {filters.isAvailable === true
-                  ? "Disponible"
-                  : "No disponible"}
-              </span>
-              <button
-                onClick={() => onFilterChange({ isAvailable: undefined })}
-                className="ml-2 text-white hover:text-gray-200 font-bold"
-              >
-                ×
-              </button>
-            </div>
-          ) : (
-            <select
-              value={
-                filters.isAvailable === false ? "notAvailable" : "available"
-              }
-
-              onChange={(e) => {
-                const value = e.target.value;
-                if (value === "available")
-                  onFilterChange({ isAvailable: true });
-                else if (value === "notAvailable")
-                  onFilterChange({ isAvailable: false });
-                else onFilterChange({ isAvailable: undefined });
-              }}
-              className="p-2 border rounded w-full"
-            >
-              <option value="">Disponibilidad</option>
-              <option value="available">Disponible</option>
-              <option value="notAvailable">No disponible</option>
-            </select>
-          )}
+          
 
           {hayFiltrosActivos() && (
             <button

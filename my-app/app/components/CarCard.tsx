@@ -14,7 +14,7 @@ interface Car {
   location: {
     departamento: string;
   };
-  imageUrl: { direccionImagen: string }[]; // Corregido aquí
+  imageUrl: { direccionImagen: string }[]; 
   host: {
     id: number;
     email: string;

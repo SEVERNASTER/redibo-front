@@ -310,8 +310,8 @@ export default function EditCar() {
                 className="mt-1 block w-full p-3 border rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400"
               >
                 <option value="">Seleccionar</option>
-                <option value="Manual">Manual</option>
-                <option value="Automático">Automático</option>
+                <option value="MANUAL">Manual</option>
+                <option value="AUTOMATICO">Automático</option>
               </select>
               {formErrors.transmission && (
                 <p className="text-red-500 text-sm mt-1">
@@ -331,9 +331,9 @@ export default function EditCar() {
                 className="mt-1 block w-full p-3 border rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-400 "
               >
                 <option value="">Seleccionar</option>
-                <option value="Gas">Gas</option>
-                <option value="Gasolina">Gasolina</option>
-                <option value="Eléctrico">Eléctrico</option>
+                <option value="GAS">Gas</option>
+                <option value="GASOLINA">Gasolina</option>
+                <option value="ELECTRICO">Eléctrico</option>
               </select>
               {formErrors.fuelType && (
                 <p className="text-red-500 text-sm mt-1">

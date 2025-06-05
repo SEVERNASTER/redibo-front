@@ -247,9 +247,10 @@ export default function MyCars() {
           </Link>
         </div>
       </div>
-      <p className="text-orange-500 font-semibold text-lg mb-4">
+      <p className="text-orange-500 font-semibold text-3xl mb-4">
         {carsResponse.totalCars} autos registrados
       </p>
+
       {/* Filtros de Autos */}
       <FiltrosHost
         filters={filters}
@@ -291,8 +292,8 @@ export default function MyCars() {
                     Array.isArray(car.imageUrl)
                       ? car.imageUrl[0]
                       : typeof car.imageUrl === "string"
-                      ? car.imageUrl.split(",")[0]?.trim()
-                      : ""
+                        ? car.imageUrl.split(",")[0]?.trim()
+                        : ""
                   }
                   alt={`${car.brand} ${car.model}`}
                   className="w-full h-40 object-cover rounded"
@@ -303,11 +304,10 @@ export default function MyCars() {
                 />
 
                 <p
-                  className={`text-sm font-medium mt-2 ${
-                    car.isAvailable === true || car.isAvailable === "true" ? "text-green-600" : "text-red-600"
-                  }`}
+                  className={`text-sm font-medium mt-2 ${car.isAvailable === true || car.isAvailable === "true" ? "text-green-600" : "text-red-600"
+                    }`}
                 >
-                  {car.isAvailable === true || car.isAvailable === "disponible" 
+                  {car.isAvailable === true || car.isAvailable === "disponible"
                     ? "🟢 Disponible"
                     : "🔴 No disponible"}
                 </p>

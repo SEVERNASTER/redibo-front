@@ -8,7 +8,7 @@ import CarCard from "../components/CarCard";
 import { fetchCars } from "../lib/api";
 import NoResultModal from "../components/NoResultModal";
 import ErrorModal from "../components/ErrorModal";
-import Paginacion from "../components/Paginacion"; 
+import Paginacion from "../components/Paginacion";
 
 
 interface Car {
@@ -17,17 +17,20 @@ interface Car {
   model: string;
   year: number;
   category: string;
-  pricePerDay: number;
+  pricePerDay: number | string;
   discount: number;
   rentalCount: number;
   rating: number;
-  location: string;
-  imageUrl: string;
+  location: {
+    departamento: string;
+  };
+  imageUrl: { direccionImagen: string }[];
   host: {
     id: number;
     email: string;
   };
 }
+
 
 interface CarsResponse {
   cars: Car[];
@@ -110,31 +113,43 @@ export default function Search() {
   };
 
   useEffect(() => {
-    const fetchFilteredCars = async () => {
-      const adaptedFilters = {
-        ...filters,
-        hostId: filters.hostId ? parseInt(filters.hostId) : undefined,
-      };
-  
-      try {
-        const response = await fetchCars(adaptedFilters);
-        setCarsResponse(response);
-  
-        if (response.cars.length === 0 && hayFiltrosEspecificos()) {
-          setShowNoResults(true);
-        } else {
-          setShowNoResults(false);
-        }
-      } catch (err) {
-        console.error("Error al filtrar:", err);
-        setError("error");
-      }
+  const fetchFilteredCars = async () => {
+    const adaptedFilters = {
+      ...filters,
+      hostId: filters.hostId ? parseInt(filters.hostId) : undefined,
     };
-  
-    fetchFilteredCars();
-  }, [filters]);  
 
-  {error && <ErrorModal onClose={() => setError(null)} />}
+    try {
+      const response = await fetchCars(adaptedFilters);
+
+      const adaptedCars = response.cars.map((car: any) => ({
+        ...car,
+        location: { departamento: car.location?.departamento || car.location?.nombre || "Desconocido" },
+        imageUrl: Array.isArray(car.imageUrl)
+          ? car.imageUrl
+          : [{ direccionImagen: car.imageUrl }],
+      }));
+
+      setCarsResponse({
+        ...response,
+        cars: adaptedCars,
+      });
+
+      if (adaptedCars.length === 0 && hayFiltrosEspecificos()) {
+        setShowNoResults(true);
+      } else {
+        setShowNoResults(false);
+      }
+    } catch (err) {
+      console.error("Error al filtrar:", err);
+      setError("error");
+    }
+  };
+
+  fetchFilteredCars();
+}, [filters]);
+
+  { error && <ErrorModal onClose={() => setError(null)} /> }
 
   return (
     <div className="container mx-auto p-4">

@@ -166,7 +166,7 @@ export default function EditCar() {
     const updatedFormData = {
       ...formData,
       imageUrls: validImageUrls,
-      isAvailable: disponible,
+      isAvailable: formData.isAvailable,
     };
 
     try {

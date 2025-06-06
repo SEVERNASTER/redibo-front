@@ -68,7 +68,7 @@ const FiltrosHost: React.FC<FiltersProps> = ({
               className="p-2 border rounded w-full"
             >
               <option value="">Transmisión</option>
-              <option value="MANUAL">MANUAL</option>
+              <option value="MANUAL">Manual</option>
               <option value="AUTOMATICO">Automático</option>
             </select>
           )}

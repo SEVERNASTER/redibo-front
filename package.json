@@ -1,0 +1,15 @@
+{
+  "name": "redibo_front",
+  "version": "1.0.0",
+  "description": "Repositorio para el desarrollo Front-end de la aplicación web RediBo. Este proyecto es desarrollado para la materia Ingenieria de Software con la docente Indira Camacho de la Universiad Mayor de San Simón\r Las tecnologías que se usarán para su desarrollo son:\r     - Next.js\r     - React\r     - Tailwind",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react-date-range": "^2.0.1"
+  }
+}

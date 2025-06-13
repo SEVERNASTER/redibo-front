@@ -101,7 +101,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
     setHostSearch("");
   };
 
-
+  const [selectedHostName, setSelectedHostName] = useState("");
   // utils/api.ts o dentro de un useEffect en tu componente
   async function getCarsByHost(hostId: number, token: string) {
     const res = await fetch(`/api/cars/host/${hostId}`, {
@@ -284,12 +284,12 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
             <option value="Santa Cruz">Santa Cruz</option>
             <option value="Cochabamba">Cochabamba</option>
             <option value="La Paz">La Paz</option>
-            {/*<option value="Santa Cruz">Tarija</option>
-            <option value="Cochabamba">Sucre</option>
-            <option value="La Paz">Oruro</option>
-            <option value="Santa Cruz">Pando</option>
-            <option value="Cochabamba">Beni</option>
-            <option value="La Paz">Potosi</option>*/}
+            {/*<option value="Tarija">Tarija</option>
+            <option value="Sucre">Sucre</option>
+            <option value="Oruro">Oruro</option>
+            <option value="Pando">Pando</option>
+            <option value="Beni">Beni</option>
+            <option value="Potosi">Potosi</option>*/}
           </select>
         </div>
 
@@ -333,7 +333,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
 
       {/* BARRA DE BÚSQUEDA */}
       <div className="relative w-full max-w-4xl mt-4">
-        <div className="flex rounded overflow-hidden border border-[#FCA311] border-[2px]">
+        <div className="flex rounded overflow-hidden border border-[#eaecef] border-[2px]">
           {/* Botón de búsqueda */}
           <button
             type="button"
@@ -611,7 +611,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
             {filters.hostId ? (
               <div className="flex items-center bg-orange-500 text-white rounded-full px-3 py-1 w-60 justify-between flex-shrink-0">
                 <span className="truncate">
-                  {selectedHost?.name || "Host"}
+                  {selectedHost? selectedHost.name : "Host"}
                 </span>
                 <button
                   onClick={() => onFilterChange({ ...filters, hostId: "" })}
@@ -647,13 +647,14 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
                 </button>
 
                 {activeFilter === 'showHostOptions' && (
+                  
                   <div className="absolute mt-2 bg-white border rounded p-2 shadow-lg z-30 w-auto">
                     <span className="truncate">
                       <h1 className="text-sm font-bold text-beige-300">Host</h1>
                     </span>
 
                     <input
-                      type="text"
+                      type="text" 
                       value={hostSearch}
                       onChange={(e) => {
                         const value = e.target.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "");
@@ -677,6 +678,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
                                     key={host.id}
                                     onClick={() => {
                                       handleHostChange(host.id);
+                                      setSelectedHost(host);
                                       setShowHostOptions(false);
                                     }}
                                     className="p-2 hover:bg-gray-100 cursor-pointer rounded flex justify-between items-center"

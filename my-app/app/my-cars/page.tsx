@@ -238,7 +238,7 @@ export default function MyCars() {
         }}
       />
       <div className="flex justify-between items-center mb-4 ">
-        <h1 className="text-2xl font-bold">Mis Autos</h1>
+        <h1 className="text-[40px] font-semibold">Mis Autos</h1>
         <div className="flex gap-4">
           <Link href="/add-car">
             <button className="bg-[#fca311] text-white px-4 py-2 rounded hover:bg-[#f97316]">
@@ -247,7 +247,7 @@ export default function MyCars() {
           </Link>
         </div>
       </div>
-      <p className="text-orange-500 font-semibold text-3xl mb-4">
+      <p className="text-orange-500 font-semibold text-[33] mb-4">
         {carsResponse.totalCars} autos registrados
       </p>
 
@@ -304,7 +304,7 @@ export default function MyCars() {
                 />
 
                 <p
-                  className={`text-sm font-medium mt-2 ${car.isAvailable === true || car.isAvailable === "true" ? "text-green-600" : "text-red-600"
+                  className={`text-sm font-medium mt-2 ${car.isAvailable === true || car.isAvailable === "true" ? "text-verde" : "text-red-600"
                     }`}
                 >
                   {car.isAvailable === true || car.isAvailable === "disponible"
@@ -431,7 +431,7 @@ export default function MyCars() {
                 className="bg-white text-orange-600 px-4 py-2 rounded-full border border-orange-400 hover:bg-orange-100 transition
                      focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
               >
-                cancelar
+                Cancelar
               </button>
               <button
                 ref={confirmButtonRef}
@@ -442,7 +442,7 @@ export default function MyCars() {
                 className="bg-orange-600 text-white px-4 py-2 rounded-full hover:bg-orange-700 transition
                      focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
               >
-                confirmar
+                Confirmar
               </button>
             </div>
           </div>

@@ -6,7 +6,11 @@ module.exports = {
       './components/**/*.{js,ts,jsx,tsx}', // Si tienes una carpeta components/
     ],
     theme: {
-      extend: {},
+      extend: {
+        colors: {
+        'verde': '#219653',
+      },
+      },
     },
     plugins: [],
   };

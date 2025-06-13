@@ -287,14 +287,32 @@ export default function AddCar() {
   };
 
   const validaTarifa = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (/^\d{0,3}$/.test(value)) {
+  const value = e.target.value;
+
+  // Validar solo si son hasta 3 dígitos numéricos
+  if (/^\d{0,3}$/.test(value)) {
+    // Si el campo está vacío, permitir borrar
+    if (value === '') {
+      setFormData({ ...formData, pricePerDay: value });
+      setPriceError('');
+      return;
+    }
+
+    const numericValue = Number(value);
+
+    // Validar si es mayor a 100
+    if (numericValue > 100) {
       setFormData({ ...formData, pricePerDay: value });
       setPriceError('');
     } else {
-      setPriceError('Solo se permiten hasta 3 dígitos positivos');
+      setFormData({ ...formData, pricePerDay: value });
+      setPriceError('La tarifa debe ser mayor a 100');
     }
-  };
+  } else {
+    setPriceError('Solo se permiten hasta 3 dígitos positivos');
+  }
+};
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

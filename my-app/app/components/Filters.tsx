@@ -333,7 +333,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
 
       {/* BARRA DE BÚSQUEDA */}
       <div className="relative w-full max-w-4xl mt-4">
-        <div className="flex rounded overflow-hidden border border-[#FCA311] border-[2px]">
+        <div className="flex rounded overflow-hidden border border-[#eaecef] border-[2px]">
           {/* Botón de búsqueda */}
           <button
             type="button"

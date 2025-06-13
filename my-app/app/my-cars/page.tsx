@@ -304,7 +304,7 @@ export default function MyCars() {
                 />
 
                 <p
-                  className={`text-sm font-medium mt-2 ${car.isAvailable === true || car.isAvailable === "true" ? "text-verde-600" : "text-red-600"
+                  className={`text-sm font-medium mt-2 ${car.isAvailable === true || car.isAvailable === "true" ? "text-verde" : "text-red-600"
                     }`}
                 >
                   {car.isAvailable === true || car.isAvailable === "disponible"

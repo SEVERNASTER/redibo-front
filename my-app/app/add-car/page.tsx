@@ -556,8 +556,8 @@ export default function AddCar() {
               className={`mt-1 block w-full p-2 border rounded ${transmissionError ? 'border-red-500' : 'border-gray-300'}`}
             >
               <option value="">Seleccionar</option>
-              <option value="Manual">Manual</option>
-              <option value="Automatico">Automático</option>
+              <option value="MANUAL">Manual</option>
+              <option value="AUTOMATICO">Automático</option>
             </select>
             {transmissionError && <p className="text-red-500 text-sm mt-1">{transmissionError}</p>}
           </div>
@@ -570,9 +570,11 @@ export default function AddCar() {
               className={`mt-1 block w-full p-2 border rounded ${fuelTypeError ? 'border-red-500' : 'border-gray-300'}`}
             >
               <option value="">Seleccionar</option>
-              <option value="Gas">Gas</option>
-              <option value="Gasolina">Gasolina</option>
-              <option value="Eléctrico">Eléctrico</option>
+              <option value="GAS">Gas</option>
+              <option value="GASOLINA">Gasolina</option>
+              <option value="ELECTRICO">Electrico</option>
+              <option value="HIBRIDO">Hibrido</option>
+              <option value="DIESEL">Diesel</option>
             </select>
             {fuelTypeError && <p className="text-red-500 text-sm mt-1">{fuelTypeError}</p>}
           </div>

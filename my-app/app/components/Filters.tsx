@@ -894,7 +894,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
                     <input
                      type="checkbox"
                      checked={filters.fuelType === "GAS"}
-                     onChange={() => handleFuelTypeChange("GAS")}
+                     onChange={() => handleFuelTypeChange("Gas")}
                    />
                      Gas
                   </label>
@@ -902,7 +902,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
                    <input
                     type="checkbox"
                     checked={filters.fuelType === "GASOLINA"}
-                    onChange={() => handleFuelTypeChange("GASOLINA")}
+                    onChange={() => handleFuelTypeChange("Gasolina")}
                    />
                      Gasolina
                   </label>
@@ -918,7 +918,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
                    <input
                     type="checkbox"
                     checked={filters.fuelType === "HIBRIDO"}
-                    onChange={() => handleFuelTypeChange("HIBRIDO")}
+                    onChange={() => handleFuelTypeChange("Hibrido")}
                    />
                      Hibrido
                   </label>
@@ -926,7 +926,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
                    <input
                     type="checkbox"
                     checked={filters.fuelType === "DIESEL"}
-                    onChange={() => handleFuelTypeChange("DIESEL")}
+                    onChange={() => handleFuelTypeChange("Diesel")}
                    />
                      Diesel
                   </label>

@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useAuth } from '../lib/authContext';
 
 export default function AddCar() {
+  const [mostrarModalCancelar, setMostrarModalCancelar] = useState(false);
+
   const router = useRouter();
   const { token } = useAuth();
 
@@ -125,7 +127,7 @@ export default function AddCar() {
   const [colorError, setColorError] = useState<string>('');
   const [seatsError, setSeatsError] = useState('');
   const [priceError, setPriceError] = useState('');
-  
+
   const validarCamposObligatorios = () => {
     let errores = false;
 
@@ -201,7 +203,7 @@ export default function AddCar() {
     } else {
       setPlateError('');
     }
-    
+
     let photoErrorsTemp = [...imageErrors];
     let photoCount = 0;
 
@@ -266,20 +268,32 @@ export default function AddCar() {
 
   const limiteAsientos = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
+
+    // Validar que solo se ingresen dígitos (o cadena vacía para permitir borrar)
     if (!/^\d*$/.test(value)) return;
-    const number = parseInt(value);
-    if (!isNaN(number)) {
-      if (number > 20) {
-        setSeatsError('La capacidad máxima es 20');
-        return;
-      } else {
-        setSeatsError('');
-      }
-    } else {
-      setSeatsError('Ingrese un número válido');
-    }
+
+    // Permitir actualizar el valor aunque esté vacío (para borrar)
     setFormData({ ...formData, [e.target.name]: value });
+
+    // Si el campo está vacío, no mostrar error
+    if (value === '') {
+      setSeatsError('');
+      return;
+    }
+
+    const number = parseInt(value);
+
+    if (isNaN(number)) {
+      setSeatsError('Ingrese un número válido');
+    } else if (number < 2) {
+      setSeatsError('Debe ingresar mínimo 2 asientos');
+    } else if (number > 20) {
+      setSeatsError('La capacidad máxima es 20');
+    } else {
+      setSeatsError('');
+    }
   };
+
 
   const validarCaracteres = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -287,31 +301,40 @@ export default function AddCar() {
   };
 
   const validaTarifa = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const value = e.target.value;
+    const value = e.target.value;
 
-  // Validar solo si son hasta 3 dígitos numéricos
-  if (/^\d{0,3}$/.test(value)) {
-    // Si el campo está vacío, permitir borrar
-    if (value === '') {
-      setFormData({ ...formData, pricePerDay: value });
-      setPriceError('');
-      return;
-    }
+    // Validar solo si son hasta 3 dígitos numéricos
+    if (/^\d{0,3}$/.test(value)) {
+      // Si el campo está vacío, permitir borrar
+      if (value === '') {
+        setFormData({ ...formData, pricePerDay: value });
+        setPriceError('');
+        return;
+      }
 
-    const numericValue = Number(value);
+      const numericValue = Number(value);
 
-    // Validar si es mayor a 100
-    if (numericValue > 100) {
-      setFormData({ ...formData, pricePerDay: value });
-      setPriceError('');
+      // Validar si es mayor a 100
+      if (numericValue > 99) {
+        setFormData({ ...formData, pricePerDay: value });
+        setPriceError('');
+      } else {
+        setFormData({ ...formData, pricePerDay: value });
+        setPriceError('La tarifa debe ser mayor a 100');
+      }
     } else {
-      setFormData({ ...formData, pricePerDay: value });
-      setPriceError('La tarifa debe ser mayor a 100');
+      setPriceError('Solo se permiten hasta 3 dígitos positivos');
     }
-  } else {
-    setPriceError('Solo se permiten hasta 3 dígitos positivos');
-  }
-};
+  };
+
+  const [showConfirm, setShowConfirm] = useState(false);
+  const handleCancelar = () => {
+    setShowConfirm(true);
+  };
+  const confirmarCancelacion = () => {
+    setShowConfirm(false);
+    router.push("/my-cars");
+  };
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -341,7 +364,7 @@ export default function AddCar() {
         throw new Error('El año no puede ser menor a 1900');
       }
       console.log(formData);
-      
+
       const API_URL = process.env.NEXT_PUBLIC_API_URL;
       const response = await fetch(`${API_URL}/cars`, {
         method: "POST",
@@ -619,8 +642,8 @@ export default function AddCar() {
         <button
           type="button"
           className="border border-orange-500 text-orange-500 px-8 py-2 rounded"
-          onClick={() => router.push("/my-cars")}
-        >
+          onClick={() => setMostrarModalCancelar(true)}      
+          >
           Cancelar
         </button>
         <button
@@ -631,6 +654,34 @@ export default function AddCar() {
           Guardar
         </button>
       </div>
+
+      {/* Modal de Confirmación */}
+      {mostrarModalCancelar && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="relative bg-orange-300 border border-orange-500 text-gray-800 shadow-xl px-6 py-5 rounded-xl w-[90%] max-w-md z-50">
+            <p className="text-md font-medium mb-4 text-center">
+              ¿Estás seguro de que deseas cancelar? Se perderán los datos no guardados.
+            </p>
+            <div className="flex justify-center gap-6">
+              <button
+                onClick={() => setMostrarModalCancelar(false)}
+                className="bg-white text-orange-600 px-4 py-2 rounded-full border border-orange-400 hover:bg-orange-100 transition focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+              >
+                No, volver
+              </button>
+              <button
+                onClick={() => {
+                  setMostrarModalCancelar(false);
+                  router.push("/my-cars");
+                }}
+                className="bg-orange-600 text-white px-4 py-2 rounded-full hover:bg-orange-700 transition focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2"
+              >
+                Sí, cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>

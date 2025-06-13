@@ -45,8 +45,9 @@ export default function CarDetails() {
       try {
         const response = await fetchCarById(Number(id), token);
         setCar(response);
-      } catch (err: any) {
-        setError(err.response?.data?.error || 'Error al cargar los detalles del auto');
+      } catch (err) {
+        const error = err as { response?: { data?: { error?: string } } };
+        setError(error.response?.data?.error || 'Error al cargar los detalles del auto');
       }
     };
 
@@ -76,9 +77,9 @@ export default function CarDetails() {
         {/* Imagen principal */}
         <div className="col-span-2">
           <img
-            src={imageArray[0]} 
+            src={imageArray[0]}
             alt="Imagen principal"
-            onClick={() => setZoomImage(imageArray[0])} 
+            onClick={() => setZoomImage(imageArray[0])}
             className="w-full h-[320px] object-cover rounded-xl shadow"
           />
         </div>
@@ -89,7 +90,7 @@ export default function CarDetails() {
             <img
               src={imageArray[1]}
               alt="Vista 2"
-              onClick={() => setZoomImage(imageArray[1])} 
+              onClick={() => setZoomImage(imageArray[1])}
               className="w-full h-[150px] object-cover rounded-xl shadow"
             />
           )}
@@ -206,15 +207,15 @@ export default function CarDetails() {
           </span>
         </div>
       </div>
-      
-        {/*Boton para volver a la lista de autos*/}
-          <button
-            onClick={() => router.push('/search')} 
-            className="mt-4 px-6 py-2 rounded-full shadow-md bg-white text-black hover:bg-orange-500 hover:text-white hover:shadow-lg active:scale-95 transition-all duration-300"
-           >
-             Volver a la lista
-          </button>
 
-      </div>
+      {/*Boton para volver a la lista de autos*/}
+      <button
+        onClick={() => router.push('/search')}
+        className="mt-4 px-6 py-2 rounded-full shadow-md bg-white text-black hover:bg-orange-500 hover:text-white hover:shadow-lg active:scale-95 transition-all duration-300"
+      >
+        Volver a la lista
+      </button>
+
+    </div>
   );
 }

@@ -13,7 +13,7 @@ export default function AddCar() {
     if (!token) {
       router.push("/login");
     }
-  }, []);
+  }, [router]);
 
   const [formData, setFormData] = useState({
     location: "",
@@ -81,15 +81,6 @@ export default function AddCar() {
     img.src = value;
   };
 
-  const handleAddEquipment = () => {
-    if (equipmentInput.trim()) {
-      setFormData((prev) => ({
-        ...prev,
-        extraEquipment: [...prev.extraEquipment, equipmentInput.trim()],
-      }));
-      setEquipmentInput("");
-    }
-  };
 
   const placa = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -118,7 +109,6 @@ export default function AddCar() {
   const [plateError, setPlateError] = useState('');
   const [transmissionError, setTransmissionError] = useState('');
   const [fuelTypeError, setFuelTypeError] = useState('');
-  const [photoError, setPhotoError] = useState('');
   const [carTypeError, setCarTypeError] = useState<string>('');
   const [locationError, setLocationError] = useState('');
   const [yearError, setYearError] = useState('');
@@ -202,12 +192,7 @@ export default function AddCar() {
       setPlateError('');
     }
     const validPhotos = formData.photoUrls.filter((url) => url.trim() !== '');
-    if (validPhotos.length < 3) {
-      setPhotoError('Debes proporcionar al menos 3 URLs de fotos');
-      errores = true;
-    } else {
-      setPhotoError('');
-    }
+    
     return !errores;
   };
 
@@ -321,8 +306,9 @@ export default function AddCar() {
 
       toast.success("¡Se guardó correctamente!");
       router.push("/my-cars");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      const error = err as Error;
+      setError(error.message);
     }
   };
 

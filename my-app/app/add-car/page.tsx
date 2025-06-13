@@ -201,14 +201,33 @@ export default function AddCar() {
     } else {
       setPlateError('');
     }
-    const validPhotos = formData.photoUrls.filter((url) => url.trim() !== '');
-    if (validPhotos.length < 3) {
-      setPhotoError('Debes proporcionar al menos 3 URLs de fotos');
+    
+    let photoErrorsTemp = [...imageErrors];
+    let photoCount = 0;
+
+    formData.photoUrls.forEach((url, index) => {
+      if (url.trim() === "") {
+        photoErrorsTemp[index] = "Ingresa una Imagen.";
+      } else {
+        photoCount++;
+        if (!extensionesValidas.test(url)) {
+          photoErrorsTemp[index] = "Formato de imagen inválido.";
+        } else {
+          photoErrorsTemp[index] = "";
+        }
+      }
+    });
+
+    if (photoCount < 3) {
+      setPhotoError("Debes proporcionar al menos 3 URLs de fotos válidas.");
       errores = true;
     } else {
-      setPhotoError('');
+      setPhotoError("");
     }
+
+    setImageErrors(photoErrorsTemp);
     return !errores;
+
   };
 
   const validacionAño = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -331,7 +331,7 @@ export default function MyCars() {
                   </p>
                 )} */}
 
-                {/* Acciones */}
+                {/* Acciones. */}
                 <div className="flex justify-start items-center gap-6 mt-4 text-sm text-center">
                 {/* Info */}
                  <div className="flex flex-col items-center flex-shrink-0">

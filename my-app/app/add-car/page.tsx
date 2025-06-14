@@ -229,7 +229,6 @@ export default function AddCar() {
 
     setImageErrors(photoErrorsTemp);
     return !errores;
-
   };
 
   const validacionAño = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -294,7 +293,6 @@ export default function AddCar() {
     }
   };
 
-
   const validarCaracteres = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -314,8 +312,13 @@ export default function AddCar() {
 
       const numericValue = Number(value);
 
+      // Validar si es menor o igual a 0
+      if (numericValue <= 0) {
+        setFormData({ ...formData, pricePerDay: value });
+        setPriceError('Ingresar monto válido');
+      }
       // Validar si es mayor a 100
-      if (numericValue > 99) {
+      else if (numericValue > 99) {
         setFormData({ ...formData, pricePerDay: value });
         setPriceError('');
       } else {
@@ -335,7 +338,6 @@ export default function AddCar() {
     setShowConfirm(false);
     router.push("/my-cars");
   };
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -556,8 +558,8 @@ export default function AddCar() {
               className={`mt-1 block w-full p-2 border rounded ${transmissionError ? 'border-red-500' : 'border-gray-300'}`}
             >
               <option value="">Seleccionar</option>
-              <option value="Manual">Manual</option>
-              <option value="Automatico">Automático</option>
+              <option value="MANUAL">Manual</option>
+              <option value="AUTOMATICO">Automático</option>
             </select>
             {transmissionError && <p className="text-red-500 text-sm mt-1">{transmissionError}</p>}
           </div>
@@ -570,9 +572,11 @@ export default function AddCar() {
               className={`mt-1 block w-full p-2 border rounded ${fuelTypeError ? 'border-red-500' : 'border-gray-300'}`}
             >
               <option value="">Seleccionar</option>
-              <option value="Gas">Gas</option>
-              <option value="Gasolina">Gasolina</option>
-              <option value="Eléctrico">Eléctrico</option>
+              <option value="GAS">Gas</option>
+              <option value="GASOLINA">Gasolina</option>
+              <option value="ELECTRICO">Electrico</option>
+              <option value="HIBRIDO">Hibrido</option>
+              <option value="DIESEL">Diesel</option>
             </select>
             {fuelTypeError && <p className="text-red-500 text-sm mt-1">{fuelTypeError}</p>}
           </div>

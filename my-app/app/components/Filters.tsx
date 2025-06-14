@@ -80,9 +80,9 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
     setShowFuelTypeOptions(false);
   };
 
-  const handleTransmissionChange = (transmission: string) => {
-    onFilterChange({ ...filters, transmission });
-    setShowTransmissionOptions(false);
+  const handleTransmissionChange = (value: string) => {
+  onFilterChange({ ...filters, transmission: value.toUpperCase() }); // Prisma espera "AUTOMATICO"
+  setShowTransmissionOptions(false);
   };
 
   const handleCarTypeChange = (carType: string) => {
@@ -789,8 +789,12 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
             {/* TRANSMISIÓN */}
             {filters.transmission ? (
               <div className="flex items-center bg-orange-500 text-white rounded-full px-3 py-1 w-40 justify-between">
-                <span className="truncate cpitalize">{filters.transmission}</span>
-                <button
+                <span className="truncate">
+                   {filters.transmission === "MANUAL" ? "Manual" :
+                    filters.transmission === "AUTOMATICO" ? "Automático" :
+                   filters.transmission}
+                 </span>
+                 <button
                   onClick={() => onFilterChange({ ...filters, transmission: "" })}
                   className="ml-2 text-white hover:text-gray-200 font-bold"
                 >
@@ -824,7 +828,7 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
                     <label className="flex items-center gap-2">
                       <input
                         type="checkbox"
-                        checked={filters.transmission === "Manual"}
+                        checked={filters.transmission === "MANUAL"}
                         onChange={() => handleTransmissionChange("Manual")}
                       />
                       Manual
@@ -832,10 +836,10 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
                     <label className="flex items-center gap-2">
                       <input
                         type="checkbox"
-                        checked={filters.transmission === "Automático"}
-                        onChange={() => handleTransmissionChange("Automático")}
+                        checked={filters.transmission === "AUTOMATICO"}
+                        onChange={() => handleTransmissionChange("Automatico")}
                       />
-                      Automático
+                      Automatico
                     </label>
                   </div>
                 )}
@@ -845,55 +849,90 @@ export default function Filters({ filters, onFilterChange }: FiltersProps) {
             {/* CONSUMO */}
             {filters.fuelType ? (
               <div className="flex items-center bg-orange-500 text-white rounded-full px-3 py-1 w-40 justify-between">
-                <span className="truncate capitalize">{filters.fuelType}</span>
-                <button
-                  onClick={() => onFilterChange({ ...filters, fuelType: "" })}
-                  className="ml-2 text-white hover:text-gray-200 font-bold"
+                <span className="truncate">
+                 {filters.fuelType === "GAS" ? "Gas" :
+                  filters.fuelType === "GASOLINA" ? "Gasolina" :
+                  filters.fuelType === "ELECTRICO" ? "Electrico" :
+                  filters.fuelType === "HIBRIDO" ? "Hibrido" :
+                  filters.fuelType === "DIESEL" ? "Diesel" :
+                  filters.fuelType}
+                </span>
+               <button
+                 onClick={() => onFilterChange({ ...filters, fuelType: "" })}
+                className="ml-2 text-white hover:text-gray-200 font-bold"
                 >
-                  ×
-                </button>
-              </div>
-            ) : (
+                   ×
+              </button>
+             </div>
+               ) : (
               <div className="w-40">
                 <button
                   type="button"
-                  onClick={() => setActiveFilter(activeFilter === 'showFuelTypeOptions' ? null : 'showFuelTypeOptions')}
-                  className="border p-2 rounded flex items-center justify-between w-full"
-                >
-                  {filters.fuelType || "Consumo"}
-                  <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
+                  onClick={() =>
+                setActiveFilter(activeFilter === 'showFuelTypeOptions' ? null : 'showFuelTypeOptions')
+                     }
+                className="border p-2 rounded flex items-center justify-between w-full"
+                     >
+                 {filters.fuelType || "Consumo"}
+                  <svg
+                     className="w-4 h-4 ml-2"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24"
+                    >
+                 <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     strokeWidth="2"
+                     d="M19 9l-7 7-7-7"
+                   />
+                 </svg>
+              </button>
                 {activeFilter === 'showFuelTypeOptions' && (
-                  <div className="absolute mt-2 bg-white border rounded p-1 shadow-lg z-10 w-auto max-w-max">
-
-                    <label
-                      className="flex items-center gap-2 cursor-pointer px-2 py-1 hover:bg-gray-100 rounded"
-                      onClick={() => handleFuelTypeChange("Gas")}
-                    >
-                      <span
-                        className={`w-4 h-4 rounded-sm border ${filters.fuelType === "Gas" ? "bg-orange-500 border-orange-500" : "bg-white border-gray-400"
-                          }`}
-                      />
-                      <span className="ml-2">Gas</span>
-                    </label>
-
-                    {/* Opción Gasolina */}
-                    <label
-                      className="flex items-center gap-2 cursor-pointer px-2 py-1 hover:bg-gray-100 rounded"
-                      onClick={() => handleFuelTypeChange("Gasolina")}
-                    >
-                      <span
-                        className={`w-4 h-4 rounded-sm border ${filters.fuelType === "Gasolina" ? "bg-orange-500 border-orange-500" : "bg-white border-gray-400"
-                          }`}
-                      />
-                      <span className="ml-2">Gasolina</span>
-                    </label>
-
-                  </div>
+                  <div className="absolute bg-white border rounded mt-2 p-2 shadow-lg z-10">
+                   <label className="flex items-center gap-2">
+                    <input
+                     type="checkbox"
+                     checked={filters.fuelType === "GAS"}
+                     onChange={() => handleFuelTypeChange("Gas")}
+                   />
+                     Gas
+                  </label>
+                  <label className="flex items-center gap-2">
+                   <input
+                    type="checkbox"
+                    checked={filters.fuelType === "GASOLINA"}
+                    onChange={() => handleFuelTypeChange("Gasolina")}
+                   />
+                     Gasolina
+                  </label>
+                  <label className="flex items-center gap-2">
+                   <input
+                    type="checkbox"
+                    checked={filters.fuelType === "ELECTRICO"}
+                    onChange={() => handleFuelTypeChange("Electrico")}
+                   />
+                     Electrico
+                  </label>
+                  <label className="flex items-center gap-2">
+                   <input
+                    type="checkbox"
+                    checked={filters.fuelType === "HIBRIDO"}
+                    onChange={() => handleFuelTypeChange("Hibrido")}
+                   />
+                     Hibrido
+                  </label>
+                  <label className="flex items-center gap-2">
+                   <input
+                    type="checkbox"
+                    checked={filters.fuelType === "DIESEL"}
+                    onChange={() => handleFuelTypeChange("Diesel")}
+                   />
+                     Diesel
+                  </label>
+                </div>
                 )}
-              </div>
+             </div>
             )}
 
             {/* Botón solo si hay filtros activos */}

@@ -332,38 +332,38 @@ export default function MyCars() {
                 )} */}
 
                 {/* Acciones */}
-                <div className="flex gap-6 mt-4 text-sm text-center">
-                  {/* Info */}
-                  <div className="flex flex-col items-center">
-                    <Link href={`/car-details-host/${car.id}`}>
-                      <button className="bg-orange-500 text-white p-3 rounded-full hover:bg-orange-600">
-                        <FaEye />
-                      </button>
-                    </Link>
-                    <span className="text-gray-700 mt-1">Info</span>
-                  </div>
-
-                  {/* Editar */}
-                  <div className="flex flex-col items-center">
-                    <Link href={`/edit-car/${car.id}`}>
-                      <button className="bg-orange-500 text-white p-3 rounded-full hover:bg-orange-600 ml-5">
-                        <FaEdit />
-                      </button>
-                    </Link>
-                    <span className="text-gray-700 mt-1 ml-5">Editar</span>
-                  </div>
-
-                  {/* Eliminar */}
-                  <div className="flex flex-col items-center">
-                    <button
-                      onClick={() => setCarToDelete(car)}
-                      className="bg-orange-500 text-white p-3 rounded-full hover:bg-red-600 ml-5"
-                    >
-                      <FaTrash />
-                    </button>
-                    <span className="text-gray-700 mt-1 ml-5">Eliminar</span>
-                  </div>
+                <div className="flex justify-start items-center gap-6 mt-4 text-sm text-center">
+                {/* Info */}
+                 <div className="flex flex-col items-center flex-shrink-0">
+                  <Link href={`/car-details-host/${car.id}`}>
+                   <button className="bg-orange-500 text-white p-3 rounded-full hover:bg-orange-600">
+                   <FaEye />
+                   </button>
+                  </Link>
+                  <span className="text-gray-700 text-sm mt-1">Info</span>
                 </div>
+
+                {/* Editar */}
+                 <div className="flex flex-col items-center flex-shrink-0">
+                  <Link href={`/edit-car/${car.id}`}>
+                   <button className="bg-orange-500 text-white p-3 rounded-full hover:bg-orange-600">
+                    <FaEdit />
+                     </button>
+                    </Link>
+                 <span className="text-gray-700 text-sm mt-1">Editar</span>
+                </div>
+
+               {/* Eliminar */}
+                 <div className="flex flex-col items-center flex-shrink-0">
+                  <button
+                   onClick={() => setCarToDelete(car)}
+                   className="bg-orange-500 text-white p-3 rounded-full hover:bg-red-600"
+                  >
+                 <FaTrash />
+               </button>
+                 <span className="text-gray-700 text-sm mt-1">Eliminar</span>
+                </div>
+               </div>
               </div>
             </div>
           ))}

@@ -229,7 +229,6 @@ export default function AddCar() {
 
     setImageErrors(photoErrorsTemp);
     return !errores;
-
   };
 
   const validacionAño = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -294,7 +293,6 @@ export default function AddCar() {
     }
   };
 
-
   const validarCaracteres = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -314,8 +312,13 @@ export default function AddCar() {
 
       const numericValue = Number(value);
 
+      // Validar si es menor o igual a 0
+      if (numericValue <= 0) {
+        setFormData({ ...formData, pricePerDay: value });
+        setPriceError('Ingresar monto válido');
+      }
       // Validar si es mayor a 100
-      if (numericValue > 99) {
+      else if (numericValue > 99) {
         setFormData({ ...formData, pricePerDay: value });
         setPriceError('');
       } else {
@@ -335,7 +338,6 @@ export default function AddCar() {
     setShowConfirm(false);
     router.push("/my-cars");
   };
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
